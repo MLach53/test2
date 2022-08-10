@@ -48,6 +48,11 @@ public class OfficeBuilding {
     }
 
     @Override
+    public String toString() {
+	return "OfficeBuilding [id=" + id + ", name=" + name + "]";
+    }
+
+    @Override
     public int hashCode() {
 	return Objects.hash(id, name, seats);
     }
