@@ -17,7 +17,6 @@ class RepositoriesFindAllTest extends SystemplacereservationApplicationTests {
 	private ReservationRepository reservationRepository;
 
 	@Test
-	@Transactional
 	void test() {
 
 		System.out.println(officeBuildingRepository.findAll());

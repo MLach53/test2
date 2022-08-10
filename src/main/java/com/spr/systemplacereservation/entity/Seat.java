@@ -17,90 +17,116 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "SEAT", uniqueConstraints = {
-	@UniqueConstraint(name = "UC_SEAT", columnNames = { "officebuilding_id", "floor_number", "seat_number" }) })
+		@UniqueConstraint(name = "UC_SEAT", columnNames = { "officebuilding_id", "floor_number", "seat_number" }) })
 public class Seat {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "officebuilding_id")
-    private OfficeBuilding officeBuilding;
+	@ManyToOne
+	@JoinColumn(name = "officebuilding_id")
+	private OfficeBuilding officeBuilding;
 
-    @Column(name = "floor_number")
-    private Integer flooNumber;
+	@Column(name = "floor_number")
+	private Integer flooNumber;
 
-    @Column(name = "seat_number")
-    private String seatNumber;
+	@Column(name = "seat_number")
+	private String seatNumber;
 
-    @OneToMany(mappedBy = "seat")
-    private List<Reservation> reservation = new ArrayList<>();
+	@Column(name = "reservationeligible")
+	private Boolean reservationEligible;
 
-    public Integer getId() {
-	return id;
-    }
+	@Column(name = "redescription")
+	private String reDescription;
 
-    public void setId(Integer id) {
-	this.id = id;
-    }
+	@OneToMany(mappedBy = "seat")
+	private List<Reservation> reservation = new ArrayList<>();
 
-    public OfficeBuilding getOfficeBuilding() {
-	return officeBuilding;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setOfficeBuilding(OfficeBuilding officeBuilding) {
-	this.officeBuilding = officeBuilding;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getFlooNumber() {
-	return flooNumber;
-    }
+	public OfficeBuilding getOfficeBuilding() {
+		return officeBuilding;
+	}
 
-    public void setFlooNumber(Integer flooNumber) {
-	this.flooNumber = flooNumber;
-    }
+	public void setOfficeBuilding(OfficeBuilding officeBuilding) {
+		this.officeBuilding = officeBuilding;
+	}
 
-    public String getSeatNumber() {
-	return seatNumber;
-    }
+	public Integer getFlooNumber() {
+		return flooNumber;
+	}
 
-    public void setSeatNumber(String seatNumber) {
-	this.seatNumber = seatNumber;
-    }
+	public void setFlooNumber(Integer flooNumber) {
+		this.flooNumber = flooNumber;
+	}
 
-    public List<Reservation> getReservation() {
-	return reservation;
-    }
+	public String getSeatNumber() {
+		return seatNumber;
+	}
 
-    public void setReservation(List<Reservation> reservation) {
-	this.reservation = reservation;
-    }
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
 
-    @Override
-    public int hashCode() {
-	return Objects.hash(flooNumber, id, officeBuilding, reservation, seatNumber);
-    }
+	public List<Reservation> getReservation() {
+		return reservation;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Seat other = (Seat) obj;
-	return Objects.equals(flooNumber, other.flooNumber) && Objects.equals(id, other.id)
-		&& Objects.equals(officeBuilding, other.officeBuilding)
-		&& Objects.equals(reservation, other.reservation) && Objects.equals(seatNumber, other.seatNumber);
-    }
+	public void setReservation(List<Reservation> reservation) {
+		this.reservation = reservation;
+	}
 
-    @Override
-    public String toString() {
-	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + flooNumber + ", seatNumber="
-		+ seatNumber + "]";
-    }
+	public Boolean getReservationeligible() {
+		return reservationEligible;
+	}
+
+	public void setReservationeligible(Boolean reservationeligible) {
+		this.reservationEligible = reservationeligible;
+	}
+
+	public String getReDescription() {
+		return reDescription;
+	}
+
+	public void setReDescription(String reDescription) {
+		this.reDescription = reDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + flooNumber + ", seatNumber="
+				+ seatNumber + ", reservationeligible=" + reservationEligible + ", reDescription=" + reDescription
+				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(flooNumber, id, officeBuilding, reDescription, reservation, reservationEligible,
+				seatNumber);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Seat other = (Seat) obj;
+		return Objects.equals(flooNumber, other.flooNumber) && Objects.equals(id, other.id)
+				&& Objects.equals(officeBuilding, other.officeBuilding)
+				&& Objects.equals(reDescription, other.reDescription) && Objects.equals(reservation, other.reservation)
+				&& Objects.equals(reservationEligible, other.reservationEligible)
+				&& Objects.equals(seatNumber, other.seatNumber);
+	}
 
 }

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spr.systemplacereservation.SystemplacereservationApplicationTests;
-import com.spr.systemplacereservation.model.Reservation;
+import com.spr.systemplacereservation.entity.Reservation;
 
 class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 
@@ -24,7 +24,6 @@ class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
     DataSource source;
 
     @Test
-    @Transactional
     void test() throws SQLException {
 
 	System.out.println(source.getConnection());

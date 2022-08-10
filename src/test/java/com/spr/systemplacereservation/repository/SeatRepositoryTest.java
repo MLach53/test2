@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +15,18 @@ import com.spr.systemplacereservation.entity.Seat;
 class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 
 	@Autowired
-	SeatRepository repository;
+	private SeatRepository repository;
 
 	@Autowired
-	OfficeBuildingRepository repo2;
+	private OfficeBuildingRepository repo2;
 
-	OfficeBuilding officeBuilding;
+	private OfficeBuilding officeBuilding;
 
-	Seat seat;
+	private Seat seat;
 
+	private int idOf;
+	private int idSe;
+	
 	@BeforeEach
 	void setUp() {
 		officeBuilding = new OfficeBuilding();
@@ -34,22 +35,27 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 		seat.setFlooNumber(1);
 		seat.setSeatNumber("AA");
 		seat.setOfficeBuilding(officeBuilding);
+		seat.setReservationeligible(false);
+		seat.setReDescription("bo tak");
+		
+		idOf = repo2.save(officeBuilding).getId();
+		idSe = repository.save(seat).getId();
 
 	}
 
-	@Transactional
 	@Test
 	void test() {
 		// when
-		int idOf = repo2.save(officeBuilding).getId();
-		int idSe = repository.save(seat).getId();
-
+		
 		Optional<Seat> opt = repository.findById(idSe);
 		Optional<OfficeBuilding> optOf = repo2.findById(idOf);
 
 		// then
 		assertEquals(true, opt.isPresent());
 		assertEquals(true, optOf.isPresent());
+		
+		System.out.println(opt.get());
+		
 
 	}
 
