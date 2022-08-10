@@ -20,8 +20,8 @@ public class Reservation {
 	
 	private int person_id;
 	
-	//@ManyToOne
-	private int seat_id;
+	@ManyToOne
+	private Seat seat;
 	
 	private Date date;
 	

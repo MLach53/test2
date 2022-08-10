@@ -17,6 +17,8 @@ class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 
 	@Autowired
 	ReservationRepository repository;
+	@Autowired
+	OfficeBuildingRepository repo2;
 	
 	@Autowired
 	DataSource source;
@@ -26,16 +28,19 @@ class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 	
 		System.out.println(source.getConnection());
 		
-		PreparedStatement statement = source.getConnection().prepareStatement("select * from Reservation");
+		PreparedStatement statement = source.getConnection().prepareStatement("select * from reservation");
 		
 		ResultSet set = statement.executeQuery();
 		
 		while(set.next()) {
 			
-			System.out.println(set.getInt("id"));
+			System.out.println(set.getInt("id") + ", " + set.getInt("seat_id"));
 		}
 		
-		System.out.println(repository.findById(1));
+		System.out.println(repo2.count());
+		
+		
+		//System.out.println(repository.findById(1));
 		
 		//System.out.println(repository.count());
 		
