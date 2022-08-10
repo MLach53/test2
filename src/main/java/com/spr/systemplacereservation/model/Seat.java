@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,25 +12,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="SEAT")
 public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @ManyToOne
     @JoinColumn(name = "officebuilding_id")
     private OfficeBuilding officeBuilding;
 
-    private int floor_number;
+    @Column(name = "floor_number")
+    private int flooNumber;
 
-    private int seat_number;
-    
+    @Column(name = "seat_number")
+    private int seatNumber;
+
     @OneToMany(mappedBy = "seat")
     private List<Reservation> reservation = new ArrayList<>();
 
@@ -45,11 +46,11 @@ public class Seat {
     }
 
     public int getFloor_number() {
-	return floor_number;
+	return flooNumber;
     }
 
     public void setFloor_number(int floor_number) {
-	this.floor_number = floor_number;
+	this.flooNumber = floor_number;
     }
 
     public List<Reservation> getReservation() {
@@ -66,7 +67,7 @@ public class Seat {
 
     @Override
     public int hashCode() {
-	return Objects.hash(floor_number, id, officeBuilding, reservation);
+	return Objects.hash(flooNumber, id, officeBuilding, reservation);
     }
 
     @Override
@@ -78,22 +79,22 @@ public class Seat {
 	if (getClass() != obj.getClass())
 	    return false;
 	Seat other = (Seat) obj;
-	return floor_number == other.floor_number && id == other.id
-		&& Objects.equals(officeBuilding, other.officeBuilding)
+	return flooNumber == other.flooNumber && id == other.id && Objects.equals(officeBuilding, other.officeBuilding)
 		&& Objects.equals(reservation, other.reservation);
     }
 
     @Override
     public String toString() {
-	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + floor_number + ", seat_number=" + seat_number + "]";
+	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + flooNumber
+		+ ", seat_number=" + seatNumber + "]";
     }
 
-	public int getSeat_number() {
-		return seat_number;
-	}
+    public int getSeat_number() {
+	return seatNumber;
+    }
 
-	public void setSeat_number(int seat_number) {
-		this.seat_number = seat_number;
-	}
+    public void setSeat_number(int seat_number) {
+	this.seatNumber = seat_number;
+    }
 
 }
