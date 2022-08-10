@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.spr.systemplacereservation.SystemplacereservationApplicationTests;
 import com.spr.systemplacereservation.entity.OfficeBuilding;
 import com.spr.systemplacereservation.entity.Seat;
+import com.spr.systemplacereservation.repository.SeatRepositoryDAO.SeatQuery;
 
 class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 
@@ -20,6 +21,9 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 	@Autowired
 	private OfficeBuildingRepository repo2;
 
+	@Autowired
+	private SeatRepositoryDAO dao;
+	
 	private OfficeBuilding officeBuilding;
 
 	private Seat seat;
@@ -32,20 +36,20 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 		officeBuilding = new OfficeBuilding();
 		officeBuilding.setName("Rybnik");
 		seat = new Seat();
-		seat.setFlooNumber(1);
+		seat.setFloorNumber(1);
 		seat.setSeatNumber("AA");
 		seat.setOfficeBuilding(officeBuilding);
 		seat.setReservationeligible(false);
 		seat.setReDescription("bo tak");
 		
-		idOf = repo2.save(officeBuilding).getId();
-		idSe = repository.save(seat).getId();
 
 	}
 
 	@Test
 	void test() {
 		// when
+		idOf = repo2.save(officeBuilding).getId();
+		idSe = repository.save(seat).getId();
 		
 		Optional<Seat> opt = repository.findById(idSe);
 		Optional<OfficeBuilding> optOf = repo2.findById(idOf);
@@ -56,7 +60,17 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 		
 		System.out.println(opt.get());
 		
+		SeatQuery query = new SeatQuery();
+		query.setBuildingOffice(idOf);
+		query.setFloorNumber(seat.getFloorNumber());
+		query.setSeatNumber("AA");
+		
+		//System.out.println(dao.findSeatBy(query));
+		
+		
 
 	}
 
+	
+	
 }

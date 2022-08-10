@@ -30,7 +30,7 @@ public class Seat {
 	private OfficeBuilding officeBuilding;
 
 	@Column(name = "floor_number")
-	private Integer flooNumber;
+	private Integer floorNumber;
 
 	@Column(name = "seat_number")
 	private String seatNumber;
@@ -60,12 +60,12 @@ public class Seat {
 		this.officeBuilding = officeBuilding;
 	}
 
-	public Integer getFlooNumber() {
-		return flooNumber;
+	public Integer getFloorNumber() {
+		return floorNumber;
 	}
 
-	public void setFlooNumber(Integer flooNumber) {
-		this.flooNumber = flooNumber;
+	public void setFloorNumber(Integer flooNumber) {
+		this.floorNumber = flooNumber;
 	}
 
 	public String getSeatNumber() {
@@ -102,14 +102,14 @@ public class Seat {
 
 	@Override
 	public String toString() {
-		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + flooNumber + ", seatNumber="
+		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + floorNumber + ", seatNumber="
 				+ seatNumber + ", reservationeligible=" + reservationEligible + ", reDescription=" + reDescription
 				+ "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(flooNumber, id, officeBuilding, reDescription, reservation, reservationEligible,
+		return Objects.hash(floorNumber, id, officeBuilding, reDescription, reservation, reservationEligible,
 				seatNumber);
 	}
 
@@ -122,7 +122,7 @@ public class Seat {
 		if (getClass() != obj.getClass())
 			return false;
 		Seat other = (Seat) obj;
-		return Objects.equals(flooNumber, other.flooNumber) && Objects.equals(id, other.id)
+		return Objects.equals(floorNumber, other.floorNumber) && Objects.equals(id, other.id)
 				&& Objects.equals(officeBuilding, other.officeBuilding)
 				&& Objects.equals(reDescription, other.reDescription) && Objects.equals(reservation, other.reservation)
 				&& Objects.equals(reservationEligible, other.reservationEligible)
