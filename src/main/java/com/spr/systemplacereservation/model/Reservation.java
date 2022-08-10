@@ -10,7 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "Reservation")
+@Table(name = "Reservation")
 public class Reservation {
 
 	@Id
@@ -19,8 +20,8 @@ public class Reservation {
 	
 	private int person_id;
 	
-	@ManyToOne
-	private Seat seat;
+	//@ManyToOne
+	private int seat_id;
 	
 	private Date date;
 	
@@ -44,13 +45,7 @@ public class Reservation {
 		this.person_id = person_id;
 	}
 
-	public Seat getSeat() {
-		return seat;
-	}
-
-	public void setSeat(Seat seat) {
-		this.seat = seat;
-	}
+	
 
 	public Date getDate() {
 		return date;
@@ -60,15 +55,6 @@ public class Reservation {
 		this.date = date;
 	}
 
-	@Override
-	public String toString() {
-		return "Reservation [id=" + id + ", person_id=" + person_id + ", seat=" + seat + ", date=" + date + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(date, id, person_id, seat);
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,7 +66,7 @@ public class Reservation {
 			return false;
 		Reservation other = (Reservation) obj;
 		return Objects.equals(date, other.date) && id == other.id && person_id == other.person_id
-				&& Objects.equals(seat, other.seat);
+				;
 	}
 	
 	
