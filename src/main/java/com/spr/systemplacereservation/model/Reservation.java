@@ -68,6 +68,11 @@ public class Reservation {
 		return Objects.equals(date, other.date) && id == other.id && person_id == other.person_id
 				;
 	}
+
+	@Override
+	public String toString() {
+		return "Reservation [id=" + id + ", person_id=" + person_id + ", seat=" + seat + ", date=" + date + "]";
+	}
 	
 	
 	
