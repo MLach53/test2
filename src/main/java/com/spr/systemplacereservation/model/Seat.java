@@ -78,4 +78,11 @@ public class Seat {
 		&& Objects.equals(reservation, other.reservation);
     }
 
+	@Override
+	public String toString() {
+		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + floor_number
+				+ ", reservation=" + reservation + "]";
+	}
+
+    
 }

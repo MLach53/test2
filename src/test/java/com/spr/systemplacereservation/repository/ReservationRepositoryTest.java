@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spr.systemplacereservation.SystemplacereservationApplicationTests;
+import com.spr.systemplacereservation.model.Reservation;
 
 class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 
@@ -37,7 +38,13 @@ class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 			System.out.println(set.getInt("id") + ", " + set.getInt("seat_id"));
 		}
 		
-		System.out.println(repo2.count());
+		for(Reservation r : repository.findAll()) {
+			
+			System.out.println(r);
+			
+		}
+		
+		//System.out.println(repo2.count());
 		
 		
 		//System.out.println(repository.findById(1));
