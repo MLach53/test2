@@ -1,4 +1,4 @@
-package com.spr.systemplacereservation.model;
+package com.spr.systemplacereservation.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,9 @@ public class Seat {
 
     @OneToMany(mappedBy = "seat")
     private List<Reservation> reservation = new ArrayList<>();
+
+    @Column(name = "reservationeligible")
+    private Boolean reservationEligible;
 
     public Integer getId() {
 	return id;
@@ -78,9 +81,17 @@ public class Seat {
 	this.reservation = reservation;
     }
 
+    public Boolean getReservationEligible() {
+	return reservationEligible;
+    }
+
+    public void setReservationEligible(Boolean reservationEligible) {
+	this.reservationEligible = reservationEligible;
+    }
+
     @Override
     public int hashCode() {
-	return Objects.hash(flooNumber, id, officeBuilding, reservation, seatNumber);
+	return Objects.hash(flooNumber, id, officeBuilding, reservation, reservationEligible, seatNumber);
     }
 
     @Override
@@ -94,13 +105,15 @@ public class Seat {
 	Seat other = (Seat) obj;
 	return Objects.equals(flooNumber, other.flooNumber) && Objects.equals(id, other.id)
 		&& Objects.equals(officeBuilding, other.officeBuilding)
-		&& Objects.equals(reservation, other.reservation) && Objects.equals(seatNumber, other.seatNumber);
+		&& Objects.equals(reservation, other.reservation)
+		&& Objects.equals(reservationEligible, other.reservationEligible)
+		&& Objects.equals(seatNumber, other.seatNumber);
     }
 
     @Override
     public String toString() {
 	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + flooNumber + ", seatNumber="
-		+ seatNumber + "]";
+		+ seatNumber + ", reservationEligible=" + reservationEligible + "]";
     }
 
 }
