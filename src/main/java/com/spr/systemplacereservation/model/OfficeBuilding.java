@@ -19,7 +19,7 @@ public class OfficeBuilding {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -27,11 +27,12 @@ public class OfficeBuilding {
     @OneToMany(mappedBy = "officeBuilding")
     private List<Seat> seats = new ArrayList<>();
 
-    public OfficeBuilding() {
+    public Integer getId() {
+	return id;
     }
 
-    public int getId() {
-	return id;
+    public void setId(Integer id) {
+	this.id = id;
     }
 
     public String getName() {
@@ -51,11 +52,6 @@ public class OfficeBuilding {
     }
 
     @Override
-    public String toString() {
-	return "OfficeBuilding [id=" + id + ", name=" + name + "]";
-    }
-
-    @Override
     public int hashCode() {
 	return Objects.hash(id, name, seats);
     }
@@ -69,7 +65,12 @@ public class OfficeBuilding {
 	if (getClass() != obj.getClass())
 	    return false;
 	OfficeBuilding other = (OfficeBuilding) obj;
-	return id == other.id && Objects.equals(name, other.name) && Objects.equals(seats, other.seats);
+	return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(seats, other.seats);
+    }
+
+    @Override
+    public String toString() {
+	return "OfficeBuilding [id=" + id + ", name=" + name + "]";
     }
 
 }

@@ -16,48 +16,44 @@ import com.spr.systemplacereservation.model.Seat;
 
 class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 
-	@Autowired
-	SeatRepository repository;
+    @Autowired
+    SeatRepository repository;
 
-	@Autowired
-	OfficeBuildingRepository repo2;
+    @Autowired
+    OfficeBuildingRepository repo2;
 
-	OfficeBuilding officeBuilding;
+    OfficeBuilding officeBuilding;
 
-	Seat seat;
-	
-	@BeforeEach
-	void setUp() {
-		officeBuilding = new OfficeBuilding();
-		officeBuilding.setName("Rybnik");
-		seat = new Seat();
-		seat.setFloor_number(1);
-		seat.setSeat_number("AA");
-		seat.setOfficeBuilding(officeBuilding);
-		
-	}
+    Seat seat;
 
-	@Transactional
-	@Test
-	void test() {
-		// when
-		int idOf = repo2.save(officeBuilding).getId();
-		int idSe = repository.save(seat).getId();
-		
-	
-		
-		Optional<Seat> opt = repository.findById(idSe);
-		Optional<OfficeBuilding> optOf = repo2.findById(idOf);
-		
-		
-		// then
-		assertEquals(true, opt.isPresent());
-		assertEquals(true, optOf.isPresent());
-		
-		System.out.println(opt.get());
-		System.out.println(optOf.get());
-		
-			
-	}
+    @BeforeEach
+    void setUp() {
+	officeBuilding = new OfficeBuilding();
+	officeBuilding.setName("Rybnik");
+	seat = new Seat();
+	seat.setFlooNumber(1);
+	seat.setSeatNumber("AA");
+	seat.setOfficeBuilding(officeBuilding);
+
+    }
+
+    @Transactional
+    @Test
+    void test() {
+	// when
+	int idOf = repo2.save(officeBuilding).getId();
+	int idSe = repository.save(seat).getId();
+
+	Optional<Seat> opt = repository.findById(idSe);
+	Optional<OfficeBuilding> optOf = repo2.findById(idOf);
+
+	// then
+	assertEquals(true, opt.isPresent());
+	assertEquals(true, optOf.isPresent());
+
+	System.out.println(opt.get());
+	System.out.println(optOf.get());
+
+    }
 
 }

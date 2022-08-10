@@ -15,83 +15,77 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "RESERVATION", uniqueConstraints = {
-		@UniqueConstraint(name ="UC_RESERVATION", columnNames = {"seat_id", "date"})
-})
+	@UniqueConstraint(name = "UC_RESERVATION", columnNames = { "seat_id", "date" }) })
 public class Reservation {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="person_id")
-	private int personId;
-	
-	@ManyToOne
-	@JoinColumn(name = "seat_id")
-	private Seat seat;
-	
-	@Column(name="date")
-	private Date date;
-	
-	public Reservation() {
-		
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name = "person_id")
+    private Integer personId;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "seat_id")
+    private Seat seat;
 
-	public int getPerson_id() {
-		return personId;
-	}
+    @Column(name = "date")
+    private Date date;
 
-	public void setPerson_id(int person_id) {
-		this.personId = person_id;
-	}
+    public Integer getId() {
+	return id;
+    }
 
+    public void setId(Integer id) {
+	this.id = id;
+    }
 
-	public Seat getSeat() {
-		return seat;
-	}
+    public Integer getPersonId() {
+	return personId;
+    }
 
-	public void setSeat(Seat seat) {
-		this.seat = seat;
-	}
+    public void setPersonId(Integer personId) {
+	this.personId = personId;
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public Seat getSeat() {
+	return seat;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setSeat(Seat seat) {
+	this.seat = seat;
+    }
 
+    public Date getDate() {
+	return date;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Reservation other = (Reservation) obj;
-		return Objects.equals(date, other.date) && id == other.id && personId == other.personId
-				;
-	}
+    public void setDate(Date date) {
+	this.date = date;
+    }
 
-	@Override
-	public String toString() {
-		return "Reservation [id=" + id + ", person_id=" + personId + ", seat=" + seat + ", date=" + date + "]";
-	}
-	
-	
-	
-	
+    @Override
+    public int hashCode() {
+	return Objects.hash(date, id, personId, seat);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Reservation other = (Reservation) obj;
+	return Objects.equals(date, other.date) && Objects.equals(id, other.id)
+		&& Objects.equals(personId, other.personId) && Objects.equals(seat, other.seat);
+    }
+
+    @Override
+    public String toString() {
+	return "Reservation [id=" + id + ", personId=" + personId + ", seat=" + seat + ", date=" + date + "]";
+    }
+
 }
-

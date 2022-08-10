@@ -17,88 +17,90 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "SEAT", uniqueConstraints = {
-		@UniqueConstraint(name = "UC_SEAT", columnNames = { "officebuilding_id", "floor_number", "seat_number" }) })
+	@UniqueConstraint(name = "UC_SEAT", columnNames = { "officebuilding_id", "floor_number", "seat_number" }) })
 public class Seat {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-	@ManyToOne
-	@JoinColumn(name = "officebuilding_id")
-	private OfficeBuilding officeBuilding;
+    @ManyToOne
+    @JoinColumn(name = "officebuilding_id")
+    private OfficeBuilding officeBuilding;
 
-	@Column(name = "floor_number")
-	private int flooNumber;
+    @Column(name = "floor_number")
+    private Integer flooNumber;
 
-	@Column(name = "seat_number")
-	private String seatNumber;
+    @Column(name = "seat_number")
+    private String seatNumber;
 
-	@OneToMany(mappedBy = "seat")
-	private List<Reservation> reservation = new ArrayList<>();
+    @OneToMany(mappedBy = "seat")
+    private List<Reservation> reservation = new ArrayList<>();
 
-	public Seat() {
-	}
+    public Integer getId() {
+	return id;
+    }
 
-	public OfficeBuilding getOfficeBuilding() {
-		return officeBuilding;
-	}
+    public void setId(Integer id) {
+	this.id = id;
+    }
 
-	public void setOfficeBuilding(OfficeBuilding officeBuilding) {
-		this.officeBuilding = officeBuilding;
-	}
+    public OfficeBuilding getOfficeBuilding() {
+	return officeBuilding;
+    }
 
-	public int getFloor_number() {
-		return flooNumber;
-	}
+    public void setOfficeBuilding(OfficeBuilding officeBuilding) {
+	this.officeBuilding = officeBuilding;
+    }
 
-	public void setFloor_number(int floor_number) {
-		this.flooNumber = floor_number;
-	}
+    public Integer getFlooNumber() {
+	return flooNumber;
+    }
 
-	public List<Reservation> getReservation() {
-		return reservation;
-	}
+    public void setFlooNumber(Integer flooNumber) {
+	this.flooNumber = flooNumber;
+    }
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
-	}
+    public String getSeatNumber() {
+	return seatNumber;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setSeatNumber(String seatNumber) {
+	this.seatNumber = seatNumber;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(flooNumber, id, officeBuilding, reservation);
-	}
+    public List<Reservation> getReservation() {
+	return reservation;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Seat other = (Seat) obj;
-		return flooNumber == other.flooNumber && id == other.id && Objects.equals(officeBuilding, other.officeBuilding)
-				&& Objects.equals(reservation, other.reservation);
-	}
+    public void setReservation(List<Reservation> reservation) {
+	this.reservation = reservation;
+    }
 
-	@Override
-	public String toString() {
-		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + flooNumber
-				+ ", seat_number=" + seatNumber + "]";
-	}
+    @Override
+    public int hashCode() {
+	return Objects.hash(flooNumber, id, officeBuilding, reservation, seatNumber);
+    }
 
-	public String getSeat_number() {
-		return seatNumber;
-	}
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Seat other = (Seat) obj;
+	return Objects.equals(flooNumber, other.flooNumber) && Objects.equals(id, other.id)
+		&& Objects.equals(officeBuilding, other.officeBuilding)
+		&& Objects.equals(reservation, other.reservation) && Objects.equals(seatNumber, other.seatNumber);
+    }
 
-	public void setSeat_number(String seat_number) {
-		this.seatNumber = seat_number;
-	}
+    @Override
+    public String toString() {
+	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + flooNumber + ", seatNumber="
+		+ seatNumber + "]";
+    }
 
 }
