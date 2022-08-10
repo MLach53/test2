@@ -23,6 +23,7 @@ public class Reservation {
 	@ManyToOne
 	private Seat seat;
 	
+
 	private Date date;
 	
 	public Reservation() {
@@ -45,7 +46,14 @@ public class Reservation {
 		this.person_id = person_id;
 	}
 
-	
+
+	public Seat getSeat() {
+		return seat;
+	}
+
+	public void setSeat(Seat seat) {
+		this.seat = seat;
+	}
 
 	public Date getDate() {
 		return date;

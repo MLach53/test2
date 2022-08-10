@@ -25,6 +25,8 @@ public class Seat {
 
     private int floor_number;
 
+    private int seat_number;
+    
     @OneToMany(mappedBy = "seat")
     private List<Reservation> reservation = new ArrayList<>();
 
@@ -80,7 +82,15 @@ public class Seat {
 
     @Override
     public String toString() {
-	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + floor_number + "]";
+	return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", floor_number=" + floor_number + ", seat_number=" + seat_number + "]";
     }
+
+	public int getSeat_number() {
+		return seat_number;
+	}
+
+	public void setSeat_number(int seat_number) {
+		this.seat_number = seat_number;
+	}
 
 }
