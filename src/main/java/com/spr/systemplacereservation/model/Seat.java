@@ -94,11 +94,11 @@ public class Seat {
 		+ ", seat_number=" + seatNumber + "]";
     }
 
-    public int getSeat_number() {
+    public char getSeat_number() {
 	return seatNumber;
     }
 
-    public void setSeat_number(int seat_number) {
+    public void setSeat_number(char seat_number) {
 	this.seatNumber = seat_number;
     }
 
