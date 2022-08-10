@@ -34,7 +34,7 @@ public class Seat {
     private int flooNumber;
 
     @Column(name = "seat_number")
-    private int seatNumber;
+    private char seatNumber;
 
     @OneToMany(mappedBy = "seat")
     private List<Reservation> reservation = new ArrayList<>();
