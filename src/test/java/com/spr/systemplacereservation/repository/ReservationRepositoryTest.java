@@ -41,6 +41,8 @@ class ReservationRepositoryTest extends SystemplacereservationApplicationTests {
 		for(Reservation r : repository.findAll()) {
 			
 			System.out.println(r);
+
+			System.out.println(" ----------------- ");
 			
 		}
 		
