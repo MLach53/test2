@@ -25,15 +25,16 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 	OfficeBuilding officeBuilding;
 
 	Seat seat;
-
+	
 	@BeforeEach
 	void setUp() {
 		officeBuilding = new OfficeBuilding();
 		officeBuilding.setName("Rybnik");
 		seat = new Seat();
 		seat.setFloor_number(1);
-		seat.setSeat_number(1);
+		seat.setSeat_number("AA");
 		seat.setOfficeBuilding(officeBuilding);
+		
 	}
 
 	@Transactional
@@ -42,7 +43,9 @@ class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 		// when
 		int idOf = repo2.save(officeBuilding).getId();
 		int idSe = repository.save(seat).getId();
-
+		
+	
+		
 		Optional<Seat> opt = repository.findById(idSe);
 		Optional<OfficeBuilding> optOf = repo2.findById(idOf);
 		
