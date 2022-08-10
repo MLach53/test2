@@ -1,4 +1,4 @@
-package com.spr.systemplacereservation.model;
+package com.spr.systemplacereservation.entity;
 
 import java.sql.Date;
 import java.util.Objects;

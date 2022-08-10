@@ -1,4 +1,4 @@
-package com.spr.systemplacereservation.model;
+package com.spr.systemplacereservation.entity;
 
 import java.util.ArrayList;
 import java.util.List;
