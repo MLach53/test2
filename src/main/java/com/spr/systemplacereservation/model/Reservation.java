@@ -3,10 +3,12 @@ package com.spr.systemplacereservation.model;
 import java.sql.Date;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -16,14 +18,17 @@ public class Reservation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 	
-	private int person_id;
+	@Column(name="person_id")
+	private int personId;
 	
 	@ManyToOne
+	@JoinColumn(name = "seat_id")
 	private Seat seat;
 	
-
+	@Column(name="date")
 	private Date date;
 	
 	public Reservation() {
@@ -39,11 +44,11 @@ public class Reservation {
 	}
 
 	public int getPerson_id() {
-		return person_id;
+		return personId;
 	}
 
 	public void setPerson_id(int person_id) {
-		this.person_id = person_id;
+		this.personId = person_id;
 	}
 
 
@@ -73,13 +78,13 @@ public class Reservation {
 		if (getClass() != obj.getClass())
 			return false;
 		Reservation other = (Reservation) obj;
-		return Objects.equals(date, other.date) && id == other.id && person_id == other.person_id
+		return Objects.equals(date, other.date) && id == other.id && personId == other.personId
 				;
 	}
 
 	@Override
 	public String toString() {
-		return "Reservation [id=" + id + ", person_id=" + person_id + ", seat=" + seat + ", date=" + date + "]";
+		return "Reservation [id=" + id + ", person_id=" + personId + ", seat=" + seat + ", date=" + date + "]";
 	}
 	
 	
