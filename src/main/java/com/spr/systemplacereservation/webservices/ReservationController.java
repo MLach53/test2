@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spr.systemplacereservation.entity.Reservation;
@@ -21,39 +23,44 @@ import com.spr.systemplacereservation.translator.Translator;
 @Validated
 public class ReservationController {
 
-	
-	@Autowired
-	ReservationService service;
-	
-	@PostMapping(path = "/reservation/make", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity makeReservation(@RequestBody ReservationDTO dto) {
-		System.out.println(Translator.toLocale("chair_forbidden"));
-		
-		
-		try {
-			Reservation res = service.makeReservation(dto);
-			
-			System.out.println(res);
-			
-			
-			return new ResponseEntity<>(dto, HttpStatus.OK);
-			
-		} catch (DataIntegrityViolationException e){
-			
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-		} catch(EmptyResultDataAccessException e) {
-			
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-		} catch(NotAvailableException e ) {
-			
-			
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-			
-		}
-		
-		
-		
-		
+    @Autowired
+    ReservationService service;
+
+    @PostMapping(path = "/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity makeReservation(@RequestBody ReservationDTO dto) {
+	System.out.println(Translator.toLocale("chair_forbidden"));
+
+	try {
+	    Reservation res = service.makeReservation(dto);
+
+	    System.out.println(res);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
+
+	} catch (DataIntegrityViolationException e) {
+
+	    return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+	} catch (EmptyResultDataAccessException e) {
+
+	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+	} catch (NotAvailableException e) {
+
+	    return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+
 	}
-	
+
+    }
+
+    @DeleteMapping(path = "/reservation")
+    public ResponseEntity deleteReservation(@RequestParam Integer id) {
+	Boolean reservationDeleted = service.deleteReservation(id);
+
+	if (reservationDeleted) {
+	    return new ResponseEntity(HttpStatus.OK);
+	} else {
+	    return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+
+    }
+
 }

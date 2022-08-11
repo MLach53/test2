@@ -15,62 +15,79 @@ import com.spr.systemplacereservation.repository.SeatRepositoryDAO.SeatQuery;
 
 class SeatRepositoryTest extends SystemplacereservationApplicationTests {
 
-	@Autowired
-	private SeatRepository repository;
+    @Autowired
+    private SeatRepository repository;
 
-	@Autowired
-	private OfficeBuildingRepository repo2;
+    @Autowired
+    private OfficeBuildingRepository repo2;
 
-	@Autowired
-	private SeatRepositoryDAO dao;
-	
-	private OfficeBuilding officeBuilding;
+    @Autowired
+    private SeatRepositoryDAO dao;
 
-	private Seat seat;
+    private OfficeBuilding officeBuilding;
 
-	private int idOf;
-	private int idSe;
-	
-	@BeforeEach
-	void setUp() {
-		officeBuilding = new OfficeBuilding();
-		officeBuilding.setName("Rybnik");
-		seat = new Seat();
-		seat.setFloorNumber(1);
-		seat.setSeatNumber("AA");
-		seat.setOfficeBuilding(officeBuilding);
-		seat.setReservationeligible(false);
-		seat.setReDescription("bo tak");
-		
+    private Seat seat;
 
-	}
+    private int idOf;
+    private int idSe;
 
-	@Test
-	void test() {
-		// when
-		idOf = repo2.save(officeBuilding).getId();
-		idSe = repository.save(seat).getId();
-		
-		Optional<Seat> opt = repository.findById(idSe);
-		Optional<OfficeBuilding> optOf = repo2.findById(idOf);
+    @BeforeEach
+    void setUp() {
+	officeBuilding = new OfficeBuilding();
+	officeBuilding.setName("Rybnik");
+	seat = new Seat();
+	seat.setFloorNumber(1);
+	seat.setSeatNumber("AA");
+	seat.setOfficeBuilding(officeBuilding);
+	seat.setReservationeligible(false);
+	seat.setReDescription("bo tak");
 
-		// then
-		assertEquals(true, opt.isPresent());
-		assertEquals(true, optOf.isPresent());
-		
-		System.out.println(opt.get());
-		
-		SeatQuery query = new SeatQuery();
-		query.setBuildingOffice(idOf);
-		query.setFloorNumber(seat.getFloorNumber());
-		query.setSeatNumber("AA");
-		
-		//System.out.println(dao.findSeatBy(query));
-		
-		
+    }
 
-	}
+    @Test
+    void test() {
+	// when
+	idOf = repo2.save(officeBuilding).getId();
+	idSe = repository.save(seat).getId();
 
-	
-	
+	Optional<Seat> opt = repository.findById(idSe);
+	Optional<OfficeBuilding> optOf = repo2.findById(idOf);
+
+	// then
+	assertEquals(true, opt.isPresent());
+	assertEquals(true, optOf.isPresent());
+
+	// System.out.println(opt.get());
+
+	SeatQuery query = new SeatQuery();
+	query.setBuildingOffice(idOf);
+	query.setFloorNumber(seat.getFloorNumber());
+	query.setSeatNumber("AA");
+
+	// System.out.println(dao.findSeatBy(query));
+
+    }
+
+    @Test
+    void findByParamsTest() {
+	idOf = repo2.save(officeBuilding).getId();
+	idSe = repository.save(seat).getId();
+
+	Optional<Seat> opt = repository.findById(idSe);
+	Optional<OfficeBuilding> optOf = repo2.findById(idOf);
+
+	// then
+	assertEquals(true, opt.isPresent());
+	assertEquals(true, optOf.isPresent());
+
+	// System.out.println(opt.get());
+
+	SeatQuery query = new SeatQuery();
+	query.setBuildingOffice(idOf);
+	query.setFloorNumber(seat.getFloorNumber());
+	query.setSeatNumber("AA");
+
+	// System.out.println("query test: " + dao.findSeatBy(query));
+    }
+
 }
