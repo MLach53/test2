@@ -1,32 +1,52 @@
 package com.spr.systemplacereservation.entity.dto;
 
-import java.sql.Date;
+import java.util.Date;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ReservationDTO {
 
-	private int officeBuildingId;
-	
-	private int floorNumber;
-	
-	private String seatNumber;
-	
-	private Date date;
-	
-	private int personId;
+	@NotNull
+	@Min(1)
+	private Integer officeBuildingId;
 
-	public int getOfficeBuildingId() {
+	@NotNull
+	private Integer floorNumber;
+
+	@NotEmpty
+	private String seatNumber;
+
+	@NotNull
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date date;
+
+	@NotNull
+	private Integer personId;
+
+	private String additionalMessage;
+
+	private Integer id;
+
+	public Integer getOfficeBuildingId() {
 		return officeBuildingId;
 	}
 
-	public void setOfficeBuildingId(int officeBuildingId) {
+	public void setOfficeBuildingId(Integer officeBuildingId) {
 		this.officeBuildingId = officeBuildingId;
 	}
 
-	public int getFloorNumber() {
+	public Integer getFloorNumber() {
 		return floorNumber;
 	}
 
-	public void setFloorNumber(int floorNumber) {
+	public void setFloorNumber(Integer floorNumber) {
 		this.floorNumber = floorNumber;
 	}
 
@@ -42,18 +62,32 @@ public class ReservationDTO {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(Date date2) {
+		this.date = date2;
 	}
 
-	public int getPersonId() {
+	public Integer getPersonId() {
 		return personId;
 	}
 
-	public void setPersonId(int personId) {
+	public void setPersonId(Integer personId) {
 		this.personId = personId;
 	}
-	
-	
-	
+
+	public void setAdditionalMessage(String additionalMessage) {
+		this.additionalMessage = additionalMessage;
+	}
+
+	public String getAdditionalMessaage() {
+		return additionalMessage;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 }

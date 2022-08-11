@@ -5,8 +5,8 @@ import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 
 public interface ReservationService {
 
-    public Reservation makeReservation(ReservationDTO dto);
+	public Reservation makeReservation(ReservationDTO dto);
 
-    public Boolean deleteReservation(Integer id);
+	public void deleteReservation(Integer id);
 
 }

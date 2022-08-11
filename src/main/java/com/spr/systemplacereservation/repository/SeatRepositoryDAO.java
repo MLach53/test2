@@ -13,69 +13,76 @@ import org.springframework.stereotype.Repository;
 
 import com.spr.systemplacereservation.entity.Seat;
 
+/**
+ * na razie nie usuwaj
+ * 
+ * @author MLach53
+ *
+ */
 @Repository
+@Deprecated(forRemoval = true)
 public class SeatRepositoryDAO {
 
-    @Autowired
-    private EntityManager manager;
+	@Autowired
+	private EntityManager manager;
 
-    @Autowired
-    private SeatRepository seatRepository;
+	@Autowired
+	private SeatRepository seatRepository;
 
-    public Seat findSeatBy(SeatQuery query) {
+	public Seat findSeatBy(SeatQuery query) {
 
-	CriteriaBuilder builder = manager.getCriteriaBuilder();
-	CriteriaQuery<Seat> criteria = builder.createQuery(Seat.class);
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Seat> criteria = builder.createQuery(Seat.class);
 
-	criteria.distinct(true);
+		criteria.distinct(true);
 
-	Root<Seat> seat = criteria.from(Seat.class);
+		Root<Seat> seat = criteria.from(Seat.class);
 
-	seat.fetch("officeBuilding", JoinType.LEFT);
+		seat.fetch("officeBuilding", JoinType.LEFT);
 
-	Predicate officePredicate = builder.equal(seat.get("officeBuilding").get("id"), query.getBuildingOffice());
+		Predicate officePredicate = builder.equal(seat.get("officeBuilding").get("id"), query.getBuildingOffice());
 
-	Predicate seatPredicate = builder.equal(seat.get("seatNumber"), query.getSeatNumber());
+		Predicate seatPredicate = builder.equal(seat.get("seatNumber"), query.getSeatNumber());
 
-	Predicate floorPredicate = builder.equal(seat.get("floorNumber"), query.getFloorNumber());
+		Predicate floorPredicate = builder.equal(seat.get("floorNumber"), query.getFloorNumber());
 
-	criteria.where(officePredicate, seatPredicate, floorPredicate);
+		criteria.where(officePredicate, seatPredicate, floorPredicate);
 
-	TypedQuery<Seat> resultQuery = manager.createQuery(criteria);
+		TypedQuery<Seat> resultQuery = manager.createQuery(criteria);
 
-	return resultQuery.getSingleResult();
-    }
-
-    public static class SeatQuery {
-
-	private int buildingOffice;
-	private int floorNumber;
-	private String seatNumber;
-
-	public int getBuildingOffice() {
-	    return buildingOffice;
+		return resultQuery.getSingleResult();
 	}
 
-	public void setBuildingOffice(int buildingOffice) {
-	    this.buildingOffice = buildingOffice;
-	}
+	public static class SeatQuery {
 
-	public int getFloorNumber() {
-	    return floorNumber;
-	}
+		private int buildingOffice;
+		private int floorNumber;
+		private String seatNumber;
 
-	public void setFloorNumber(int floorNumber) {
-	    this.floorNumber = floorNumber;
-	}
+		public int getBuildingOffice() {
+			return buildingOffice;
+		}
 
-	public String getSeatNumber() {
-	    return seatNumber;
-	}
+		public void setBuildingOffice(int buildingOffice) {
+			this.buildingOffice = buildingOffice;
+		}
 
-	public void setSeatNumber(String seatNumber) {
-	    this.seatNumber = seatNumber;
-	}
+		public int getFloorNumber() {
+			return floorNumber;
+		}
 
-    }
+		public void setFloorNumber(int floorNumber) {
+			this.floorNumber = floorNumber;
+		}
+
+		public String getSeatNumber() {
+			return seatNumber;
+		}
+
+		public void setSeatNumber(String seatNumber) {
+			this.seatNumber = seatNumber;
+		}
+
+	}
 
 }
