@@ -11,7 +11,7 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 @Configuration
 public class TranslatorConfiguration {
 
-	public static Locale POLAND = new Locale("pl");
+	private static final Locale POLAND = new Locale("pl");
 
 	@Bean
 	LocaleResolver localeResolver() {
@@ -29,4 +29,6 @@ public class TranslatorConfiguration {
 		rs.setUseCodeAsDefaultMessage(true);
 		return rs;
 	}
+
+	//
 }

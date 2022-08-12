@@ -7,6 +7,7 @@ import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,10 @@ import com.spr.systemplacereservation.translator.Translator;
 public class ReservationController {
 
 	@Autowired
-	ReservationService service;
+	private ReservationService service;
 
 	@Autowired
-	Translator translator;
+	private Translator translator;
 
 	@PostMapping(path = "/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> makeReservation(@RequestBody @Valid ReservationDTO dto) {
@@ -74,7 +75,7 @@ public class ReservationController {
 
 			service.deleteReservation(id);
 
-		} catch (NoSuchElementException e) {
+		} catch (EmptyResultDataAccessException e) {
 
 			return new ResponseEntity<>(
 					e.getLocalizedMessage() + "\n" + translator.toLocale("reservation_delete_not_found"),

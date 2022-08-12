@@ -16,61 +16,61 @@ import javax.persistence.Table;
 @Table(name = "OFFICEBUILDING")
 public class OfficeBuilding {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "name")
+	private String name;
 
-    @OneToMany(mappedBy = "officeBuilding")
-    private List<Seat> seats = new ArrayList<>();
+	@OneToMany(mappedBy = "officeBuilding")
+	private List<Seat> seats = new ArrayList<>();
 
-    public Integer getId() {
-	return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-	this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName() {
-	return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-	this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public List<Seat> getSeats() {
-	return seats;
-    }
+	public List<Seat> getSeats() {
+		return seats;
+	}
 
-    public void setSeats(List<Seat> seats) {
-	this.seats = seats;
-    }
+	public void setSeats(List<Seat> seats) {
+		this.seats = seats;
+	}
 
-    @Override
-    public int hashCode() {
-	return Objects.hash(id, name, seats);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, seats);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	OfficeBuilding other = (OfficeBuilding) obj;
-	return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(seats, other.seats);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OfficeBuilding other = (OfficeBuilding) obj;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(seats, other.seats);
+	}
 
-    @Override
-    public String toString() {
-	return "OfficeBuilding [id=" + id + ", name=" + name + "]";
-    }
+	@Override
+	public String toString() {
+		return "OfficeBuilding [id=" + id + ", name=" + name + "]";
+	}
 
 }

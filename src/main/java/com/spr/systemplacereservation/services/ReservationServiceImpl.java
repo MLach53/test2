@@ -23,14 +23,14 @@ import com.spr.systemplacereservation.translator.Translator;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-	private Logger logger = LoggerFactory.getLogger(ReservationServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReservationServiceImpl.class);
 
 	private ReservationRepository reservationRepository;
 	private VCheckReservationRepository vCheckReservationRepository;
 	private SeatRepository seatRepository;
 
 	@Autowired
-	Translator translator;
+	private Translator translator;
 
 	public ReservationServiceImpl(ReservationRepository repository, SeatRepository seatRepository,
 			VCheckReservationRepository vCheckReservationRepository) {
@@ -43,25 +43,12 @@ public class ReservationServiceImpl implements ReservationService {
 	@Transactional
 	public Reservation makeReservation(ReservationDTO dto) {
 
-		Reservation reservation = new Reservation();
-
-		reservation.setDate(dto.getDate());
-		reservation.setPersonId(dto.getPersonId());
-
-		// SeatQuery query = new SeatQuery();
-
-		// query.setBuildingOffice(dto.getOfficeBuildingId());
-		// query.setFloorNumber(dto.getFloorNumber());
-		// query.setSeatNumber(dto.getSeatNumber());
-
-		// Seat seat = seatRepositoryDAO.findSeatBy(query);
-
 		Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
 		Seat seat = optional.orElseThrow();
 
-		if (!seat.getReservationeligible().booleanValue()) {
+		if (!seat.getReservationeligible()) {
 
 			throw new NotAvailableException(translator.toLocale("chair_forbidden"));
 		}
@@ -70,8 +57,11 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
 		}
 
-		reservation.setSeat(seat);
+		Reservation reservation = new Reservation();
 
+		reservation.setDate(dto.getDate());
+		reservation.setPersonId(dto.getPersonId());
+		reservation.setSeat(seat);
 		reservation.setDate(dto.getDate());
 
 		return reservationRepository.save(reservation);
@@ -81,15 +71,15 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	@Transactional
 	public void deleteReservation(Integer id) {
-		logger.info("attempting to delete reservation");
+		LOGGER.debug("attempting to delete reservation");
 
-		Reservation reservation = reservationRepository.findById(id).orElseThrow();
+		// Reservation reservation = reservationRepository.findById(id).orElseThrow();
 
-		reservationRepository.delete(reservation);
+		reservationRepository.deleteById(id);
 	}
 
 	public boolean userAlreadyHasRegistraionInBuilding(ReservationDTO dto) {
-		logger.info("checking one reservation for one building rule for one user...");
+		LOGGER.debug("checking one reservation for one building rule for one user...");
 		Optional<VCheckReservation> optional = vCheckReservationRepository
 				.findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
 						dto.getOfficeBuildingId());

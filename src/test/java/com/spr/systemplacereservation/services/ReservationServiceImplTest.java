@@ -3,8 +3,6 @@ package com.spr.systemplacereservation.services;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +37,8 @@ class ReservationServiceImplTest extends SystemplacereservationApplicationTests 
 	}
 
 	@Test
-	@Transactional
 	void test() {
 
-		// when
 		service.makeReservation(dto);
 
 		// given

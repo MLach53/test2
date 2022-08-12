@@ -37,7 +37,7 @@ public class Seat {
 	private String seatNumber;
 
 	@Column(name = "reservationeligible")
-	private Boolean reservationEligible;
+	private boolean reservationEligible;
 
 	@Column(name = "redescription")
 	private String reDescription;
@@ -85,11 +85,11 @@ public class Seat {
 		this.reservation = reservation;
 	}
 
-	public Boolean getReservationeligible() {
+	public boolean getReservationeligible() {
 		return reservationEligible;
 	}
 
-	public void setReservationeligible(Boolean reservationeligible) {
+	public void setReservationeligible(boolean reservationeligible) {
 		this.reservationEligible = reservationeligible;
 	}
 
