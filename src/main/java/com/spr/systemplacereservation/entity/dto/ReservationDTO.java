@@ -10,84 +10,105 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.spr.systemplacereservation.entity.Reservation;
+
 public class ReservationDTO {
 
-	@NotNull
-	@Min(1)
-	private Integer officeBuildingId;
+    @NotNull
+    @Min(1)
+    private Integer officeBuildingId;
 
-	@NotNull
-	private Integer floorNumber;
+    @NotNull
+    private Integer floorNumber;
 
-	@NotEmpty
-	private String seatNumber;
+    @NotEmpty
+    private String seatNumber;
 
-	@NotNull
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate date;
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
-	@NotNull
-	private Integer personId;
+    @NotNull
+    private Integer personId;
 
-	private String additionalMessage;
+    private String additionalMessage;
 
-	private Integer id;
+    private Integer id;
 
-	public Integer getOfficeBuildingId() {
-		return officeBuildingId;
-	}
+    public static ReservationDTO convertToDto(Reservation reservation) {
+	return new ReservationDTO(reservation.getSeat().getOfficeBuilding().getId(),
+		reservation.getSeat().getFloorNumber(), reservation.getSeat().getSeatNumber(), reservation.getDate(),
+		reservation.getPersonId(), null, reservation.getId());
+    }
 
-	public void setOfficeBuildingId(Integer officeBuildingId) {
-		this.officeBuildingId = officeBuildingId;
-	}
+    public ReservationDTO(@NotNull @Min(1) Integer officeBuildingId, @NotNull Integer floorNumber,
+	    @NotEmpty String seatNumber, @NotNull LocalDate date, @NotNull Integer personId, String additionalMessage,
+	    Integer id) {
+	super();
+	this.officeBuildingId = officeBuildingId;
+	this.floorNumber = floorNumber;
+	this.seatNumber = seatNumber;
+	this.date = date;
+	this.personId = personId;
+	this.additionalMessage = additionalMessage;
+	this.id = id;
+    }
 
-	public Integer getFloorNumber() {
-		return floorNumber;
-	}
+    public Integer getOfficeBuildingId() {
+	return officeBuildingId;
+    }
 
-	public void setFloorNumber(Integer floorNumber) {
-		this.floorNumber = floorNumber;
-	}
+    public void setOfficeBuildingId(Integer officeBuildingId) {
+	this.officeBuildingId = officeBuildingId;
+    }
 
-	public String getSeatNumber() {
-		return seatNumber;
-	}
+    public Integer getFloorNumber() {
+	return floorNumber;
+    }
 
-	public void setSeatNumber(String seatNumber) {
-		this.seatNumber = seatNumber;
-	}
+    public void setFloorNumber(Integer floorNumber) {
+	this.floorNumber = floorNumber;
+    }
 
-	public LocalDate getDate() {
-		return date;
-	}
+    public String getSeatNumber() {
+	return seatNumber;
+    }
 
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
+    public void setSeatNumber(String seatNumber) {
+	this.seatNumber = seatNumber;
+    }
 
-	public Integer getPersonId() {
-		return personId;
-	}
+    public LocalDate getDate() {
+	return date;
+    }
 
-	public void setPersonId(Integer personId) {
-		this.personId = personId;
-	}
+    public void setDate(LocalDate date) {
+	this.date = date;
+    }
 
-	public void setAdditionalMessage(String additionalMessage) {
-		this.additionalMessage = additionalMessage;
-	}
+    public Integer getPersonId() {
+	return personId;
+    }
 
-	public String getAdditionalMessaage() {
-		return additionalMessage;
-	}
+    public void setPersonId(Integer personId) {
+	this.personId = personId;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public void setAdditionalMessage(String additionalMessage) {
+	this.additionalMessage = additionalMessage;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public String getAdditionalMessaage() {
+	return additionalMessage;
+    }
+
+    public Integer getId() {
+	return id;
+    }
+
+    public void setId(Integer id) {
+	this.id = id;
+    }
 
 }
