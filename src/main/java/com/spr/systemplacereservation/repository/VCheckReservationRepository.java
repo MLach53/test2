@@ -1,6 +1,6 @@
 package com.spr.systemplacereservation.repository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.repository.Repository;
@@ -18,7 +18,7 @@ public interface VCheckReservationRepository extends Repository<VCheckReservatio
 	 * @param officeBuildingId
 	 * @return VCheckReservation if exists
 	 */
-	Optional<VCheckReservation> findFirstByDateAndPersonIdAndOfficeBuildingId(Date date, Integer personId,
+	Optional<VCheckReservation> findFirstByDateAndPersonIdAndOfficeBuildingId(LocalDate date, Integer personId,
 			Integer officeBuildingId);
 
 }

@@ -53,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new NotAvailableException(translator.toLocale("chair_forbidden"));
 		}
 
-		if (userAlreadyHasRegistraionInBuilding(dto)) {
+		if (userAlreadyHasReservationInBuilding(dto)) {
 			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
 		}
 
@@ -78,7 +78,8 @@ public class ReservationServiceImpl implements ReservationService {
 		reservationRepository.deleteById(id);
 	}
 
-	public boolean userAlreadyHasRegistraionInBuilding(ReservationDTO dto) {
+	public boolean userAlreadyHasReservationInBuilding(ReservationDTO dto) {
+
 		LOGGER.debug("checking one reservation for one building rule for one user...");
 		Optional<VCheckReservation> optional = vCheckReservationRepository
 				.findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
