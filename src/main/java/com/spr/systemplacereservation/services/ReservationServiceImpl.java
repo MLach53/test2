@@ -3,7 +3,6 @@ package com.spr.systemplacereservation.services;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -96,7 +95,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	return reservationRepository.findByDate(date).stream().map(reservation -> {
 	    return ReservationDTO.convertToDto(reservation);
-	}).collect(Collectors.toList());
+	}).toList();
 
     }
 
