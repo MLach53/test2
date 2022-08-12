@@ -55,6 +55,10 @@ public class ReservationDTO {
 	this.id = id;
     }
 
+    public ReservationDTO() {
+	super();
+    }
+
     public Integer getOfficeBuildingId() {
 	return officeBuildingId;
     }
