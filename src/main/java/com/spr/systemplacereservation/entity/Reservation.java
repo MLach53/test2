@@ -1,6 +1,6 @@
 package com.spr.systemplacereservation.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ public class Reservation {
 	private Seat seat;
 
 	@Column(name = "date")
-	private Date date;
+	private LocalDate date;
 
 	public Integer getId() {
 		return id;
@@ -57,11 +57,11 @@ public class Reservation {
 		this.seat = seat;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

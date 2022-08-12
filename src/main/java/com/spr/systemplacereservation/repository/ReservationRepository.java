@@ -15,6 +15,9 @@ public interface ReservationRepository extends CrudRepository<Reservation, Integ
 	Optional<Reservation> findFirstByDateAndPersonIdAndOfficeBuildingId(LocalDate date, Integer personId,
 			Integer officeBuildingId);
 
+	// @Query(value = "select s,o from Seat s left outer join OfficeBuilding o on
+	// s.officeBuilding.id = o.id where o.id = :officeBuildingId AND s.seatNumber=
+	// :seatNumber AND s.floorNumber=:floorNumber")
 	List<Reservation> findAllbyDate(LocalDate date);
 
 }

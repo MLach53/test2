@@ -1,7 +1,7 @@
 package com.spr.systemplacereservation.services;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class ReservationServiceImplTest extends SystemplacereservationApplicationTests 
 	@BeforeEach
 	void setUp() throws ParseException {
 		dto = new ReservationDTO();
-		dto.setDate(new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-09"));
+		dto.setDate(LocalDate.of(2022, 8, 10));
 		dto.setFloorNumber(2);
 		dto.setOfficeBuildingId(1);
 		dto.setSeatNumber("K");

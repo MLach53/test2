@@ -1,6 +1,6 @@
 package com.spr.systemplacereservation.entity.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +25,7 @@ public class ReservationDTO {
 	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date date;
+	private LocalDate date;
 
 	@NotNull
 	private Integer personId;
@@ -58,12 +58,12 @@ public class ReservationDTO {
 		this.seatNumber = seatNumber;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date2) {
-		this.date = date2;
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public Integer getPersonId() {

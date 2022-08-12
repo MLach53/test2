@@ -1,7 +1,7 @@
 package com.spr.systemplacereservation.repository;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ class RepositoriesFindAllTest extends SystemplacereservationApplicationTests {
 
 		//
 
-		var a = new SimpleDateFormat("yyyy-MM-dd").parse("2022-08-10");
+		var a = LocalDate.of(2022, 8, 10);
 
 		System.out.println(a.getMonth());
 		System.out.println(a);
