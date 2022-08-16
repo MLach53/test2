@@ -23,4 +23,6 @@ public interface ReservationRepository extends CrudRepository<Reservation, Integ
 
 	List<Reservation> findByDate(LocalDate date);
 
+	List<Reservation> findByDateBetween(LocalDate startingDate, LocalDate endingDate);
+
 }
