@@ -2,6 +2,7 @@ package com.spr.systemplacereservation.webservices;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
+import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.exceptions.NotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.services.ReservationService;
@@ -94,6 +96,14 @@ public class ReservationController {
     public ResponseEntity<List<ReservationDTO>> getReservationsAtGivenDate(
 	    @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 	return new ResponseEntity<>(service.getReservationsAtGivenDate(date), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/reservation")
+    public ResponseEntity<Map<LocalDate, List<ReservationWithoutDateDTO>>> getReserervationsAtGivenTimeSpan(
+	    @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startingDate,
+	    @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endingDate) {
+	return new ResponseEntity<Map<LocalDate, List<ReservationWithoutDateDTO>>>(
+		service.getReserervationsAtGivenTimeSpan(startingDate, endingDate), HttpStatus.OK);
     }
 
 }
