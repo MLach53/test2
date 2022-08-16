@@ -83,4 +83,10 @@ public class ReservationWithoutDateDTO {
 		this.id = id;
 	}
 
+	@Override
+	public String toString() {
+		return "ReservationWithoutDateDTO [officeBuildingId=" + officeBuildingId + ", floorNumber=" + floorNumber
+				+ ", seatNumber=" + seatNumber + ", personId=" + personId + ", id=" + id + "]";
+	}
+
 }

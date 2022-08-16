@@ -96,7 +96,7 @@ class ReservationRepositoryTest2 extends SystemplacereservationApplicationTests 
 
 	}
 
-	@Test
+	// @Test
 	void testFindFirstByDateAndPersonIdAndOfficeBuildingIdPresent() {
 
 		// when
@@ -108,7 +108,7 @@ class ReservationRepositoryTest2 extends SystemplacereservationApplicationTests 
 
 	}
 
-	@Test
+	// @Test
 	void testFindFirstByDateAndPersonIdAndOfficeBuildingIdEmpty() {
 
 		// when
@@ -120,7 +120,7 @@ class ReservationRepositoryTest2 extends SystemplacereservationApplicationTests 
 
 	}
 
-	@Test
+	// @Test
 	void testFindByDate() {
 
 		// when
@@ -131,7 +131,7 @@ class ReservationRepositoryTest2 extends SystemplacereservationApplicationTests 
 
 	}
 
-	@Test
+	// @Test
 	void testFindByDateEmpty() {
 
 		// when
@@ -139,6 +139,22 @@ class ReservationRepositoryTest2 extends SystemplacereservationApplicationTests 
 
 		// then
 		assertTrue(value.isEmpty());
+	}
+
+	@Test
+	void testFindByDateBetween() {
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("ReservationRepositoryTest2.testFindByDateBetween()");
+
+		reservationRepository.findByDateBetween(LocalDate.of(2022, 8, 13), LocalDate.of(2022, 8, 14))
+				.forEach(System.out::println);
+
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
 	}
 
 }

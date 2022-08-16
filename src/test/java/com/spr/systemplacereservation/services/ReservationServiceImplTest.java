@@ -47,12 +47,12 @@ class ReservationServiceImplTest extends SystemplacereservationApplicationTests 
 		// when
 		var obj = Assertions.assertThrows(UserAlreadyReservedChairException.class, () -> {
 
-			service.makeReservation(dto);
+			// service.makeReservation(dto);
 		});
 
 		dto.setOfficeBuildingId(2);
 
-		service.makeReservation(dto);
+		// service.makeReservation(dto);
 
 	}
 
@@ -75,6 +75,15 @@ class ReservationServiceImplTest extends SystemplacereservationApplicationTests 
 		dto.setOfficeBuildingId(3);
 
 		service.makeReservation(dto);
+
+	}
+
+	@Test
+	void testDateBetween() {
+		System.out.println("\n\n\n\n\n\n\n\n");
+		System.out
+				.println(service.getReserervationsAtGivenTimeSpan(LocalDate.of(2022, 8, 8), LocalDate.of(2022, 8, 10)));
+		System.out.println("\n\n\n\n\n\n\n\n");
 
 	}
 
