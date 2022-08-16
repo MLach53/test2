@@ -1,7 +1,10 @@
 package com.spr.systemplacereservation.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,6 +18,7 @@ import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.VCheckReservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
+import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.exceptions.NotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.ReservationRepository;
@@ -97,6 +101,25 @@ public class ReservationServiceImpl implements ReservationService {
 	    return ReservationDTO.convertToDto(reservation);
 	}).toList();
 
+    }
+
+    @Override
+    public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
+	    LocalDate endingDate) {
+
+	Map<LocalDate, List<ReservationWithoutDateDTO>> map = new HashMap<>();
+
+	reservationRepository.findByDateBetween(startingDate, endingDate).forEach(reservation -> {
+	    if (map.get(reservation.getDate()) != null) {
+		map.get(reservation.getDate()).add(ReservationWithoutDateDTO.convertToDto(reservation));
+	    } else {
+		List<ReservationWithoutDateDTO> list = new ArrayList<>();
+		list.add(ReservationWithoutDateDTO.convertToDto(reservation));
+		map.put(reservation.getDate(), list);
+	    }
+
+	});
+	return map;
     }
 
 }
