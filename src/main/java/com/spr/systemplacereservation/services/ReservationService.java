@@ -7,6 +7,7 @@ import java.util.Map;
 import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
+import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
 
 public interface ReservationService {
 
@@ -18,5 +19,7 @@ public interface ReservationService {
 
     public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
 	    LocalDate endingDate);
+
+    public Reservation updateReservation(UpdateReservationDTO dto);
 
 }

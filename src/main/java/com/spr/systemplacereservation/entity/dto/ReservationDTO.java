@@ -42,6 +42,12 @@ public class ReservationDTO {
 		reservation.getPersonId(), null, reservation.getId());
     }
 
+    public static ReservationDTO convertToDtoFromUpdateDto(UpdateReservationDTO reservation) {
+	return new ReservationDTO(reservation.getOfficeBuildingId(), reservation.getFloorNumber(),
+		reservation.getSeatNumber(), reservation.getDate(), reservation.getPersonId(), null,
+		reservation.getId());
+    }
+
     public ReservationDTO(@NotNull @Min(1) Integer officeBuildingId, @NotNull Integer floorNumber,
 	    @NotEmpty String seatNumber, @NotNull LocalDate date, @NotNull Integer personId, String additionalMessage,
 	    Integer id) {
