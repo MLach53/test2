@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spr.systemplacereservation.entity.Reservation;
@@ -34,15 +33,13 @@ public class ReservationServiceImpl implements ReservationService {
 	private ReservationRepository reservationRepository;
 	private VCheckReservationRepository vCheckReservationRepository;
 	private SeatRepository seatRepository;
-
-	@Autowired
 	private Translator translator;
 
 	public ReservationServiceImpl(ReservationRepository repository, SeatRepository seatRepository,
-			VCheckReservationRepository vCheckReservationRepository) {
+			Translator translator) {
 		this.reservationRepository = repository;
 		this.seatRepository = seatRepository;
-		this.vCheckReservationRepository = vCheckReservationRepository;
+		this.translator = translator;
 	}
 
 	@Override

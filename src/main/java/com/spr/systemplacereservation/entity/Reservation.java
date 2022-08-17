@@ -16,94 +16,95 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "RESERVATION", uniqueConstraints = {
-	@UniqueConstraint(name = "UC_RESERVATION", columnNames = { "seat_id", "date" }) })
+		@UniqueConstraint(name = "UC_RESERVATION", columnNames = { "seat_id", "date" }) })
 public class Reservation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
 
-    private LocalDate creationDate;
+	@Column(name = "person_id")
+	private Integer personId;
 
-    @Column(name = "person_id")
-    private Integer personId;
+	@ManyToOne
+	@JoinColumn(name = "seat_id")
+	private Seat seat;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private Seat seat;
+	@Column(name = "date")
+	private LocalDate date;
 
-    @Column(name = "date")
-    private LocalDate date;
+	@Column(name = "created_on")
+	private LocalDate creationOn;
 
-    @PrePersist
-    protected void onCreate() {
-	creationDate = LocalDate.now();
-    }
+	@PrePersist
+	protected void onCreate() {
+		creationOn = LocalDate.now();
+	}
 
-    public Integer getId() {
-	return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-	this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getPersonId() {
-	return personId;
-    }
+	public Integer getPersonId() {
+		return personId;
+	}
 
-    public void setPersonId(Integer personId) {
-	this.personId = personId;
-    }
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
+	}
 
-    public Seat getSeat() {
-	return seat;
-    }
+	public Seat getSeat() {
+		return seat;
+	}
 
-    public void setSeat(Seat seat) {
-	this.seat = seat;
-    }
+	public void setSeat(Seat seat) {
+		this.seat = seat;
+	}
 
-    public LocalDate getDate() {
-	return date;
-    }
+	public LocalDate getDate() {
+		return date;
+	}
 
-    public void setDate(LocalDate date) {
-	this.date = date;
-    }
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
-    public LocalDate getCreationDate() {
-	return creationDate;
-    }
+	public LocalDate getCreationDate() {
+		return creationOn;
+	}
 
-    public void setCreationDate(LocalDate creationDate) {
-	this.creationDate = creationDate;
-    }
+	public void setCreationDate(LocalDate creationDate) {
+		this.creationOn = creationDate;
+	}
 
-    @Override
-    public int hashCode() {
-	return Objects.hash(creationDate, date, id, personId, seat);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationOn, date, id, personId, seat);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Reservation other = (Reservation) obj;
-	return Objects.equals(creationDate, other.creationDate) && Objects.equals(date, other.date)
-		&& Objects.equals(id, other.id) && Objects.equals(personId, other.personId)
-		&& Objects.equals(seat, other.seat);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reservation other = (Reservation) obj;
+		return Objects.equals(creationOn, other.creationOn) && Objects.equals(date, other.date)
+				&& Objects.equals(id, other.id) && Objects.equals(personId, other.personId)
+				&& Objects.equals(seat, other.seat);
+	}
 
-    @Override
-    public String toString() {
-	return "Reservation [id=" + id + ", creationDate=" + creationDate + ", personId=" + personId + ", seat=" + seat
-		+ ", date=" + date + "]";
-    }
+	@Override
+	public String toString() {
+		return "Reservation [id=" + id + ", creationDate=" + creationOn + ", personId=" + personId + ", seat=" + seat
+				+ ", date=" + date + "]";
+	}
 
 }

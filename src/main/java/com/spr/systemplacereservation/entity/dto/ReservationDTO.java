@@ -34,23 +34,25 @@ public class ReservationDTO {
 
 	private String additionalMessage;
 
+	private LocalDate createdOn;
+
 	private Integer id;
 
 	public static ReservationDTO convertToDto(Reservation reservation) {
 		return new ReservationDTO(reservation.getSeat().getOfficeBuilding().getId(),
 				reservation.getSeat().getFloorNumber(), reservation.getSeat().getSeatNumber(), reservation.getDate(),
-				reservation.getPersonId(), null, reservation.getId());
+				reservation.getPersonId(), null, reservation.getId(), reservation.getCreationDate());
 	}
 
 	public static ReservationDTO convertToDtoFromUpdateDto(UpdateReservationDTO reservation) {
 		return new ReservationDTO(reservation.getOfficeBuildingId(), reservation.getFloorNumber(),
 				reservation.getSeatNumber(), reservation.getDate(), reservation.getPersonId(), null,
-				reservation.getId());
+				reservation.getId(), null);
 	}
 
 	public ReservationDTO(@NotNull @Min(1) Integer officeBuildingId, @NotNull Integer floorNumber,
 			@NotEmpty String seatNumber, @NotNull LocalDate date, @NotNull Integer personId, String additionalMessage,
-			Integer id) {
+			Integer id, LocalDate creationDate) {
 		super();
 		this.officeBuildingId = officeBuildingId;
 		this.floorNumber = floorNumber;
@@ -59,6 +61,7 @@ public class ReservationDTO {
 		this.personId = personId;
 		this.additionalMessage = additionalMessage;
 		this.id = id;
+		this.createdOn = creationDate;
 	}
 
 	public ReservationDTO() {
@@ -121,11 +124,19 @@ public class ReservationDTO {
 		this.id = id;
 	}
 
+	public LocalDate getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(LocalDate createdOn) {
+		this.createdOn = createdOn;
+	}
+
 	@Override
 	public String toString() {
 		return "ReservationDTO [officeBuildingId=" + officeBuildingId + ", floorNumber=" + floorNumber + ", seatNumber="
 				+ seatNumber + ", date=" + date + ", personId=" + personId + ", additionalMessage=" + additionalMessage
-				+ ", id=" + id + "]";
+				+ ", createdOn=" + createdOn + ", id=" + id + "]";
 	}
 
 }
