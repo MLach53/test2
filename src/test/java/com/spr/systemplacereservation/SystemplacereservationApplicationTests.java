@@ -9,8 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class SystemplacereservationApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+
+	}
 
 }
