@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -35,15 +34,15 @@ class ReservationServiceUnitTest {
 	@Mock
 	private TranslatorService translator;
 
-	@InjectMocks
-	private ReservationService reservationService = new ReservationServiceImpl(reservationRepository, seatRepository,
-			translator);
+	private ReservationService reservationService;
 
 	private ReservationDTO dto;
 	private Reservation ret;
 
 	@BeforeEach
 	void setUp() throws Exception {
+
+		reservationService = new ReservationServiceImpl(reservationRepository, seatRepository, translator);
 
 		// given
 		OfficeBuilding officeBuilding = new OfficeBuilding();

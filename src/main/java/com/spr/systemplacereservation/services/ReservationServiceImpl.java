@@ -27,99 +27,138 @@ import com.spr.systemplacereservation.translator.TranslatorService;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReservationServiceImpl.class);
 
-    private final ReservationRepository reservationRepository;
-    private final SeatRepository seatRepository;
-    private final TranslatorService translator;
+	private final ReservationRepository reservationRepository;
+	private final SeatRepository seatRepository;
+	private final TranslatorService translator;
 
-    public ReservationServiceImpl(ReservationRepository repository, SeatRepository seatRepository,
-	    TranslatorService translator) {
-	this.reservationRepository = repository;
-	this.seatRepository = seatRepository;
-	this.translator = translator;
-    }
-
-    @Override
-    @Transactional
-    public Reservation makeReservation(ReservationDTO dto) {
-
-	Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
-		dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
-
-	Seat seat = optional.orElseThrow();
-
-	if (!seat.getReservationeligible()) {
-
-	    throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
+	public ReservationServiceImpl(ReservationRepository repository, SeatRepository seatRepository,
+			TranslatorService translator) {
+		this.reservationRepository = repository;
+		this.seatRepository = seatRepository;
+		this.translator = translator;
 	}
 
-	if (userAlreadyHasReservationInBuilding(dto)) {
-	    throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
+	@Override
+	@Transactional
+	public Reservation makeReservation(ReservationDTO dto) {
+
+		Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
+				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
+
+		Seat seat = optional.orElseThrow();
+
+		if (!seat.getReservationeligible()) {
+
+			throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
+		}
+
+		if (userAlreadyHasReservationInBuilding(dto)) {
+			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
+		}
+
+		Reservation reservation = new Reservation();
+
+		reservation.setDate(dto.getDate());
+		reservation.setPersonId(dto.getPersonId());
+		reservation.setSeat(seat);
+		reservation.setDate(dto.getDate());
+
+		return reservationRepository.save(reservation);
+
 	}
 
-	Reservation reservation = new Reservation();
+	@Override
+	@Transactional
+	public void deleteReservation(Integer id) {
+		LOGGER.debug("attempting to delete reservation");
 
-	reservation.setDate(dto.getDate());
-	reservation.setPersonId(dto.getPersonId());
-	reservation.setSeat(seat);
-	reservation.setDate(dto.getDate());
+		// Reservation reservation = reservationRepository.findById(id).orElseThrow();
 
-	return reservationRepository.save(reservation);
+		reservationRepository.deleteById(id);
+	}
 
-    }
+	public boolean userAlreadyHasReservationInBuilding(ReservationDTO dto) {
 
-    @Override
-    @Transactional
-    public void deleteReservation(Integer id) {
-	LOGGER.debug("attempting to delete reservation");
+		LOGGER.debug("checking one reservation for one building rule for one user...");
+		Optional<Reservation> optional = reservationRepository.findFirstByDateAndPersonIdAndOfficeBuildingId(
+				dto.getDate(), dto.getPersonId(), dto.getOfficeBuildingId());
 
-	// Reservation reservation = reservationRepository.findById(id).orElseThrow();
+		return optional.isPresent();
+	}
 
-	reservationRepository.deleteById(id);
-    }
+	@Override
+	public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) {
 
-    public boolean userAlreadyHasReservationInBuilding(ReservationDTO dto) {
+		return reservationRepository.findByDate(date).stream().map(ReservationDTO::convertToDto).toList();
 
-	LOGGER.debug("checking one reservation for one building rule for one user...");
-	Optional<Reservation> optional = reservationRepository.findFirstByDateAndPersonIdAndOfficeBuildingId(
-		dto.getDate(), dto.getPersonId(), dto.getOfficeBuildingId());
+	}
 
-	return optional.isPresent();
-    }
+	@Override
+	public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
+			LocalDate endingDate) {
 
-    @Override
-    public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) {
+		Map<LocalDate, List<ReservationWithoutDateDTO>> map = new HashMap<>();
 
-	return reservationRepository.findByDate(date).stream().map(ReservationDTO::convertToDto).toList();
+		reservationRepository.findByDateBetween(startingDate, endingDate).forEach(reservation -> {
+			if (map.get(reservation.getDate()) != null) {
+				map.get(reservation.getDate()).add(ReservationWithoutDateDTO.convertToDto(reservation));
+			} else {
+				List<ReservationWithoutDateDTO> list = new ArrayList<>();
+				list.add(ReservationWithoutDateDTO.convertToDto(reservation));
+				map.put(reservation.getDate(), list);
+			}
 
-    }
+		});
+		return map;
+	}
 
-    @Override
-    public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
-	    LocalDate endingDate) {
+	@Override
+	@Transactional
+	public Reservation updateReservation(UpdateReservationDTO dto) {
+		deleteReservation(dto.getId());
 
-	Map<LocalDate, List<ReservationWithoutDateDTO>> map = new HashMap<>();
+		return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
+	}
 
-	reservationRepository.findByDateBetween(startingDate, endingDate).forEach(reservation -> {
-	    if (map.get(reservation.getDate()) != null) {
-		map.get(reservation.getDate()).add(ReservationWithoutDateDTO.convertToDto(reservation));
-	    } else {
-		List<ReservationWithoutDateDTO> list = new ArrayList<>();
-		list.add(ReservationWithoutDateDTO.convertToDto(reservation));
-		map.put(reservation.getDate(), list);
-	    }
+	@Transactional
+	public Reservation updateReservation2(UpdateReservationDTO dto) {
 
-	});
-	return map;
-    }
+		System.out.println("----------------------------hibernate analyze----------------------");
 
-    @Override
-    @Transactional
-    public Reservation updateReservation(UpdateReservationDTO dto) {
-	deleteReservation(dto.getId());
+		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
 
-	return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
-    }
+		Reservation reservation = optional.orElseThrow();
+
+		Optional<Seat> optionalSeat = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
+				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
+
+		Seat seat = optionalSeat.orElseThrow();
+
+		if (!seat.getReservationeligible()) {
+
+			throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
+		}
+
+		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
+				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {
+			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
+		}
+
+		System.out.println(reservation.getSeat().getReservation());
+
+		reservation.getSeat().getReservation().remove(reservation);
+		reservation.setSeat(seat);
+		seat.getReservation().add(reservation);
+
+		seatRepository.save(seat);
+
+		return reservationRepository.save(reservation);
+
+		// deleteReservation(dto.getId());
+
+		// return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
+	}
 
 }
