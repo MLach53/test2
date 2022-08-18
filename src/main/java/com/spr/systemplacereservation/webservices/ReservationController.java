@@ -103,8 +103,8 @@ public class ReservationController {
 
 	@GetMapping(path = "/reservation")
 	public ResponseEntity<Map<LocalDate, List<ReservationWithoutDateDTO>>> getReserervationsAtGivenTimeSpan(
-			@RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startingDate,
-			@RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endingDate) {
+			@RequestParam(name = "starting_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startingDate,
+			@RequestParam(name = "ending_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endingDate) {
 		return new ResponseEntity<>(service.getReserervationsAtGivenTimeSpan(startingDate, endingDate), HttpStatus.OK);
 	}
 
