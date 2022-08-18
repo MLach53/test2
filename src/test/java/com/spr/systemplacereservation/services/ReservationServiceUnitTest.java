@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,120 +27,178 @@ import com.spr.systemplacereservation.translator.TranslatorService;
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceUnitTest {
 
-	@Mock
-	private ReservationRepository reservationRepository;
+    @Mock
+    private ReservationRepository reservationRepository;
 
-	@Mock
-	private SeatRepository seatRepository;
+    @Mock
+    private SeatRepository seatRepository;
 
-	@Mock
-	private TranslatorService translator;
+    @Mock
+    private TranslatorService translator;
 
-	private ReservationService reservationService;
+    private ReservationService reservationService;
 
-	private ReservationDTO dto;
-	private Reservation ret;
+    private ReservationDTO dto;
+    private Reservation ret;
+    private OfficeBuilding officeBuilding;
+    private Seat seat;
+    Reservation reservation;
 
-	@BeforeEach
-	void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
 
-		reservationService = new ReservationServiceImpl(reservationRepository, seatRepository, translator);
+	reservationService = new ReservationServiceImpl(reservationRepository, seatRepository, translator);
 
-		// given
-		OfficeBuilding officeBuilding = new OfficeBuilding();
-		officeBuilding.setId(1);
-		officeBuilding.setName("Gliwice");
+	// given
+	officeBuilding = new OfficeBuilding();
+	officeBuilding.setId(1);
+	officeBuilding.setName("Gliwice");
 
-		Seat seat = new Seat();
-		seat.setFloorNumber(1);
-		seat.setId(1);
-		seat.setOfficeBuilding(officeBuilding);
-		seat.setReservationeligible(true);
-		seat.setSeatNumber("A");
+	seat = new Seat();
+	seat.setFloorNumber(1);
+	seat.setId(1);
+	seat.setOfficeBuilding(officeBuilding);
+	seat.setReservationeligible(true);
+	seat.setSeatNumber("A");
 
-		officeBuilding.getSeats().add(seat);
+	officeBuilding.getSeats().add(seat);
 
-		dto = new ReservationDTO();
-		dto.setDate(LocalDate.of(2022, 8, 19));
-		dto.setSeatNumber(seat.getSeatNumber());
-		dto.setFloorNumber(seat.getFloorNumber());
-		dto.setOfficeBuildingId(seat.getOfficeBuilding().getId());
-		dto.setPersonId(2);
-		dto.setCreatedOn(LocalDate.of(2022, 8, 17));
+	dto = new ReservationDTO();
+	dto.setDate(LocalDate.of(2022, 8, 19));
+	dto.setSeatNumber(seat.getSeatNumber());
+	dto.setFloorNumber(seat.getFloorNumber());
+	dto.setOfficeBuildingId(seat.getOfficeBuilding().getId());
+	dto.setPersonId(2);
+	dto.setCreatedOn(LocalDate.of(2022, 8, 17));
 
-		when(seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
-				dto.getSeatNumber(), dto.getFloorNumber())).thenReturn(Optional.of(seat));
+	reservation = new Reservation();
+	reservation.setDate(dto.getDate());
+	reservation.setPersonId(dto.getPersonId());
+	reservation.setSeat(seat);
+	reservation.setDate(dto.getDate());
 
-		Reservation reservation = new Reservation();
-		reservation.setDate(dto.getDate());
-		reservation.setPersonId(dto.getPersonId());
-		reservation.setSeat(seat);
-		reservation.setDate(dto.getDate());
+	ret = new Reservation();
+	ret.setDate(dto.getDate());
+	ret.setPersonId(dto.getPersonId());
+	ret.setSeat(seat);
+	ret.setDate(dto.getDate());
+	ret.setCreationDate(LocalDate.now());
+	ret.setId(1);
 
-		when(reservationRepository.findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
-				dto.getOfficeBuildingId())).thenReturn(Optional.empty());
+    }
 
-		ret = new Reservation();
-		ret.setDate(dto.getDate());
-		ret.setPersonId(dto.getPersonId());
-		ret.setSeat(seat);
-		ret.setDate(dto.getDate());
-		ret.setCreationDate(LocalDate.now());
-		ret.setId(1);
+    @Test
+    void testMakeReservation() {
 
-		when(reservationRepository.save(reservation)).thenReturn(ret);
+	// given
 
-	}
+	when(reservationRepository.save(reservation)).thenReturn(ret);
 
-	@Test
-	void testMakeReservation() {
+	when(seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
+		dto.getSeatNumber(), dto.getFloorNumber())).thenReturn(Optional.of(seat));
 
-		Reservation res = reservationService.makeReservation(dto);
+	when(reservationRepository.findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
+		dto.getOfficeBuildingId())).thenReturn(Optional.empty());
 
-		verify(reservationRepository).findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
-				dto.getOfficeBuildingId());
+	// when
 
-		verify(seatRepository).findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
-				dto.getSeatNumber(), dto.getFloorNumber());
+	Reservation res = reservationService.makeReservation(dto);
 
-		assertEquals(ret, res);
+	// then
 
-		// when(reservationRepository.save(reservation)).thenReturn(reservation);
-		// when
+	verify(reservationRepository).findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
+		dto.getOfficeBuildingId());
 
-		// Reservation reservation2 = reservationService.makeReservation(dto);
-		// then
-		// assertEquals(reservation, reservation2);
+	verify(seatRepository).findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
+		dto.getSeatNumber(), dto.getFloorNumber());
 
-	}
+	assertEquals(ret, res);
 
-	@Test
-	void testDeleteReservation() {
-		Reservation r = reservationService.makeReservation(dto);
+	// when(reservationRepository.save(reservation)).thenReturn(reservation);
+	// when
 
-		reservationService.deleteReservation(r.getId());
+	// Reservation reservation2 = reservationService.makeReservation(dto);
+	// then
+	// assertEquals(reservation, reservation2);
 
-		verify(reservationRepository).findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
-				dto.getOfficeBuildingId());
+    }
 
-		verify(seatRepository).findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
-				dto.getSeatNumber(), dto.getFloorNumber());
+    @Test
+    void testDeleteReservation() {
 
-	}
+	// given
 
-	@Test
-	void testGetReservationsAtGivenDate() {
-		fail("Not yet implemented");
-	}
+	when(reservationRepository.save(reservation)).thenReturn(ret);
 
-	@Test
-	void testGetReserervationsAtGivenTimeSpan() {
-		fail("Not yet implemented");
-	}
+	when(seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
+		dto.getSeatNumber(), dto.getFloorNumber())).thenReturn(Optional.of(seat));
 
-	@Test
-	void testUpdateReservation() {
-		fail("Not yet implemented");
-	}
+	when(reservationRepository.findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
+		dto.getOfficeBuildingId())).thenReturn(Optional.empty());
+
+	Reservation r = reservationService.makeReservation(dto);
+
+	// when
+
+	reservationService.deleteReservation(r.getId());
+
+	// then
+
+	verify(reservationRepository).findFirstByDateAndPersonIdAndOfficeBuildingId(dto.getDate(), dto.getPersonId(),
+		dto.getOfficeBuildingId());
+
+	verify(seatRepository).findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto.getOfficeBuildingId(),
+		dto.getSeatNumber(), dto.getFloorNumber());
+
+    }
+
+    @Test
+    void testGetReservationsAtGivenDate() {
+
+	// given
+
+	LocalDate date = LocalDate.of(2022, 8, 18);
+	List<Reservation> list = new ArrayList<>();
+	list.add(ret);
+
+	ReservationDTO dtoWithId = ReservationDTO.convertToDto(ret);
+
+	when(reservationRepository.findByDate(date)).thenReturn(list);
+
+	// when
+	ReservationDTO temp = reservationService.getReservationsAtGivenDate(date).get(0);
+
+	// then
+	verify(reservationRepository).findByDate(date);
+	assertEquals(temp, dtoWithId);
+
+    }
+
+    @Test
+    void testGetReserervationsAtGivenTimeSpan() {
+	// given
+
+	LocalDate date1 = LocalDate.of(2022, 8, 19);
+	LocalDate date2 = LocalDate.of(2022, 8, 20);
+
+	List<Reservation> list = new ArrayList<>();
+	list.add(ret);
+
+	when(reservationRepository.findByDateBetween(date1, date2)).thenReturn(list);
+
+	// when
+
+	reservationService.getReserervationsAtGivenTimeSpan(date1, date2);
+
+	// then
+
+	verify(reservationRepository).findByDateBetween(date1, date2);
+
+    }
+
+    @Test
+    void testUpdateReservation() {
+	fail("Not yet implemented");
+    }
 
 }
