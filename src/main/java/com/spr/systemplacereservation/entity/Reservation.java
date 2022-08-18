@@ -14,6 +14,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name = "RESERVATION", uniqueConstraints = {
 		@UniqueConstraint(name = "UC_RESERVATION", columnNames = { "seat_id", "date" }) })
@@ -35,11 +37,12 @@ public class Reservation {
 	private LocalDate date;
 
 	@Column(name = "created_on")
+	@CreationTimestamp
 	private LocalDate creationOn;
 
 	@PrePersist
 	protected void onCreate() {
-		creationOn = LocalDate.now();
+		// creationOn = LocalDate.now();
 	}
 
 	public Integer getId() {

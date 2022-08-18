@@ -22,7 +22,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.NotAvailableException;
+import com.spr.systemplacereservation.exceptions.ChairNotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.OfficeBuildingRepository;
 import com.spr.systemplacereservation.repository.ReservationRepository;
@@ -135,7 +135,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationChairNotAvaliable() {
 
 		// then
-		Assertions.assertThrows(NotAvailableException.class, () -> {
+		Assertions.assertThrows(ChairNotAvailableException.class, () -> {
 
 			// when
 			service.makeReservation(dtoTwo);

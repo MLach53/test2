@@ -8,11 +8,11 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Translator {
+public class TranslatorService {
 
 	private ResourceBundleMessageSource messageSource;
 
-	public Translator(@Qualifier("textsResourceBundleMessageSource") ResourceBundleMessageSource messageSource) {
+	public TranslatorService(@Qualifier("textsResourceBundleMessageSource") ResourceBundleMessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 

@@ -21,7 +21,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
-import com.spr.systemplacereservation.translator.Translator;
+import com.spr.systemplacereservation.translator.TranslatorService;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceUnitTest {
@@ -33,7 +33,7 @@ class ReservationServiceUnitTest {
 	private SeatRepository seatRepository;
 
 	@Mock
-	private Translator translator;
+	private TranslatorService translator;
 
 	@InjectMocks
 	private ReservationService reservationService = new ReservationServiceImpl(reservationRepository, seatRepository,

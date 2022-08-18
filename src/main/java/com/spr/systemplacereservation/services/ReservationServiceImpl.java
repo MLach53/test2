@@ -18,12 +18,12 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.NotAvailableException;
+import com.spr.systemplacereservation.exceptions.ChairNotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 import com.spr.systemplacereservation.repository.VCheckReservationRepository;
-import com.spr.systemplacereservation.translator.Translator;
+import com.spr.systemplacereservation.translator.TranslatorService;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -33,10 +33,10 @@ public class ReservationServiceImpl implements ReservationService {
 	private ReservationRepository reservationRepository;
 	private VCheckReservationRepository vCheckReservationRepository;
 	private SeatRepository seatRepository;
-	private Translator translator;
+	private TranslatorService translator;
 
 	public ReservationServiceImpl(ReservationRepository repository, SeatRepository seatRepository,
-			Translator translator) {
+			TranslatorService translator) {
 		this.reservationRepository = repository;
 		this.seatRepository = seatRepository;
 		this.translator = translator;
@@ -53,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		if (!seat.getReservationeligible()) {
 
-			throw new NotAvailableException(translator.toLocale("chair_forbidden"));
+			throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
 		}
 
 		if (userAlreadyHasReservationInBuilding(dto)) {
