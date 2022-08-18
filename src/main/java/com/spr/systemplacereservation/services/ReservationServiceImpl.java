@@ -62,8 +62,9 @@ public class ReservationServiceImpl implements ReservationService {
 
 		reservation.setDate(dto.getDate());
 		reservation.setPersonId(dto.getPersonId());
+
+		seat.getReservation().add(reservation);
 		reservation.setSeat(seat);
-		reservation.setDate(dto.getDate());
 
 		return reservationRepository.save(reservation);
 
@@ -74,9 +75,15 @@ public class ReservationServiceImpl implements ReservationService {
 	public void deleteReservation(Integer id) {
 		LOGGER.debug("attempting to delete reservation");
 
-		// Reservation reservation = reservationRepository.findById(id).orElseThrow();
+		Reservation reservation = reservationRepository.findById(id).orElseThrow();
 
-		reservationRepository.deleteById(id);
+		Seat seat = reservation.getSeat();
+
+		reservationRepository.delete(reservation);
+
+		seat.getReservation().remove(reservation);
+
+		seatRepository.save(seat);
 	}
 
 	public boolean userAlreadyHasReservationInBuilding(ReservationDTO dto) {
@@ -114,16 +121,16 @@ public class ReservationServiceImpl implements ReservationService {
 		return map;
 	}
 
-	@Override
 	@Transactional
-	public Reservation updateReservation(UpdateReservationDTO dto) {
+	public Reservation updateReservationOld(UpdateReservationDTO dto) {
 		deleteReservation(dto.getId());
 
 		return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
 	}
 
+	@Override
 	@Transactional
-	public Reservation updateReservation2(UpdateReservationDTO dto) {
+	public Reservation updateReservation(UpdateReservationDTO dto) {
 
 		System.out.println("----------------------------hibernate analyze----------------------");
 
@@ -135,6 +142,9 @@ public class ReservationServiceImpl implements ReservationService {
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
 		Seat seat = optionalSeat.orElseThrow();
+
+		System.out.println(dto.getOfficeBuildingId());
+		System.out.println(reservation.getSeat().getOfficeBuilding().getId());
 
 		if (!seat.getReservationeligible()) {
 

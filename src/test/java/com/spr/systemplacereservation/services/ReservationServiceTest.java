@@ -42,6 +42,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	private Seat seatTwo;
 	private Seat seatThree;
 	private Seat seatFour;
+	private Seat seatFive;
+	private Seat seatSix;
 
 	private ReservationDTO dtoOne;
 	private ReservationDTO dtoTwo;
@@ -98,6 +100,20 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		seatFour.setReservationeligible(false);
 		seatFour.setReDescription("seat is under maintenance");
 		seatRepository.save(seatFour);
+
+		seatFive = new Seat();
+		seatFive.setFloorNumber(1);
+		seatFive.setOfficeBuilding(buildingTwo);
+		seatFive.setSeatNumber("C");
+		seatFive.setReservationeligible(true);
+		seatRepository.save(seatFive);
+
+		seatSix = new Seat();
+		seatSix.setFloorNumber(1);
+		seatSix.setOfficeBuilding(building);
+		seatSix.setSeatNumber("C");
+		seatSix.setReservationeligible(true);
+		seatRepository.save(seatSix);
 
 		dtoOne = new ReservationDTO();
 		dtoOne.setDate(LocalDate.of(2022, 8, 14));
@@ -276,7 +292,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	@Test
 	@Disabled
-	void testUpdateReservation() {
+	void testUpdateReservationOld() {
 
 		Reservation reservation = service.makeReservation(dtoThree);
 
@@ -295,12 +311,12 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservation2() {
+	void testUpdateReservation() {
 
+		// given
 		Reservation reservation = service.makeReservation(dtoThree);
-
-		System.out.println("before");
-		System.out.println(reservation);
+		Seat oldSeat = reservation.getSeat();
+		int oldSeatId = oldSeat.getId().intValue();
 
 		UpdateReservationDTO dto = new UpdateReservationDTO();
 		dto.setDate(LocalDate.of(2022, 8, 13));
@@ -310,15 +326,126 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setId(reservation.getId());
 		dto.setOfficeBuildingId(seatOne.getOfficeBuilding().getId());
 
-		Reservation updatedReservation = service.updateReservation2(dto);
+		// when
+		Reservation updatedReservation = service.updateReservation(dto);
+		int currentSeatId = updatedReservation.getSeat().getId().intValue();
 
-		System.out.println("after");
-		System.out.println(updatedReservation);
-		System.out.println(reservation);
+		// then
+		assertNotEquals(oldSeatId, currentSeatId);
+	}
 
-		// System.out.println(reservation.equals(updatedReservation));
+	@Test
+	void testUpdateReservationUserAlreadyRegistered() {
 
-		assertNotEquals(reservation, updatedReservation);
+		// given
+		dtoThree.setDate(dtoOne.getDate());
+		service.makeReservation(dtoThree);
+		Reservation reservation = service.makeReservation(dtoOne);
+
+		UpdateReservationDTO dto = new UpdateReservationDTO();
+		dto.setDate(dtoOne.getDate());
+
+		dto.setFloorNumber(seatFive.getFloorNumber());
+		dto.setSeatNumber(seatFive.getSeatNumber());
+		dto.setPersonId(reservation.getPersonId());
+		dto.setId(reservation.getId());
+		dto.setOfficeBuildingId(seatFive.getOfficeBuilding().getId());
+
+		// then
+		Assertions.assertThrows(UserAlreadyReservedChairException.class, () -> {
+
+			// when
+			Reservation updatedReservation = service.updateReservation(dto);
+
+		});
+
+	}
+
+	@Test
+	void testUpdateReservationSwitchSeatsSameDateSameBuilding() {
+
+		// given
+		Reservation reservation = service.makeReservation(dtoOne);
+		Seat oldSeat = reservation.getSeat();
+		int oldSeatId = oldSeat.getId().intValue();
+
+		UpdateReservationDTO dto = new UpdateReservationDTO();
+		dto.setDate(dtoOne.getDate());
+		dto.setFloorNumber(seatSix.getFloorNumber());
+		dto.setSeatNumber(seatSix.getSeatNumber());
+		dto.setPersonId(reservation.getPersonId());
+		dto.setId(reservation.getId());
+		dto.setOfficeBuildingId(seatSix.getOfficeBuilding().getId());
+
+		// when
+		Reservation updatedReservation = service.updateReservation(dto);
+		int currentSeatId = updatedReservation.getSeat().getId().intValue();
+
+		// then
+		assertNotEquals(oldSeatId, currentSeatId);
+
+	}
+
+	@Test
+	void testUpdateReservationNonExistentReservationId() {
+
+		// given
+		UpdateReservationDTO dto = new UpdateReservationDTO();
+		dto.setDate(dtoOne.getDate());
+		dto.setFloorNumber(seatSix.getFloorNumber());
+		dto.setSeatNumber(seatSix.getSeatNumber());
+		dto.setPersonId(4);
+		dto.setId(-1);
+		dto.setOfficeBuildingId(seatSix.getOfficeBuilding().getId());
+
+		// then
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+
+			// when
+			Reservation updatedReservation = service.updateReservation(dto);
+
+		});
+
+	}
+
+	@Test
+	void testUpdateReservationNonExistentSeat() {
+
+		// given
+		Reservation reservation = service.makeReservation(dtoOne);
+		UpdateReservationDTO dto = new UpdateReservationDTO();
+		dto.setDate(dtoOne.getDate());
+		dto.setFloorNumber(3);
+		dto.setSeatNumber("AN");
+		dto.setPersonId(4);
+		dto.setId(reservation.getId());
+		dto.setOfficeBuildingId(-1);
+
+		// then
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+
+			// when
+			Reservation updatedReservation = service.updateReservation(dto);
+
+		});
+
+	}
+
+	@Disabled
+	@Test
+	void testUpdateReservationChairNotAvaliable() {
+		// given
+		Reservation reservation = service.makeReservation(dtoOne);
+		UpdateReservationDTO dto = new UpdateReservationDTO();
+		dto.setDate(LocalDate.of(0, 0, 0));
+
+		// then
+		Assertions.assertThrows(ChairNotAvailableException.class, () -> {
+
+			// when
+			service.updateReservation(dto);
+
+		});
 
 	}
 
