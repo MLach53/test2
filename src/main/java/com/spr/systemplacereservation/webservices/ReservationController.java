@@ -29,7 +29,7 @@ import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ChairNotAvailableException;
+import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.services.ReservationService;
 import com.spr.systemplacereservation.translator.TranslatorService;
@@ -67,7 +67,7 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_not_existing_seat_or_else"),
 					HttpStatus.NOT_FOUND);
-		} catch (ChairNotAvailableException e) {
+		} catch (SeatNotAvailableException e) {
 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 
@@ -127,7 +127,7 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_not_existing_seat_or_else"),
 					HttpStatus.NOT_FOUND);
-		} catch (ChairNotAvailableException e) {
+		} catch (SeatNotAvailableException e) {
 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 

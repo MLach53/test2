@@ -18,7 +18,9 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ChairNotAvailableException;
+import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
+import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
+import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
@@ -47,11 +49,11 @@ public class ReservationServiceImpl implements ReservationService {
 		Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
-		Seat seat = optional.orElseThrow();
+		Seat seat = optional.orElseThrow(() -> new SeatNotFoundException(translator.toLocale("seat_not_found")));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
+			throw new SeatNotAvailableException(translator.toLocale("seat_forbidden"));
 		}
 
 		if (userAlreadyHasReservationInBuilding(dto)) {
@@ -75,7 +77,8 @@ public class ReservationServiceImpl implements ReservationService {
 	public void deleteReservation(Integer id) {
 		LOGGER.debug("attempting to delete reservation");
 
-		Reservation reservation = reservationRepository.findById(id).orElseThrow();
+		Reservation reservation = reservationRepository.findById(id)
+				.orElseThrow(() -> new ReservationNotFoundException(translator.toLocale("reservation_not_found")));
 
 		Seat seat = reservation.getSeat();
 
@@ -96,6 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
+	@Transactional
 	public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) {
 
 		return reservationRepository.findByDate(date).stream().map(ReservationDTO::convertToDto).toList();
@@ -103,6 +107,7 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
+	@Transactional
 	public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
 			LocalDate endingDate) {
 
@@ -132,31 +137,25 @@ public class ReservationServiceImpl implements ReservationService {
 	@Transactional
 	public Reservation updateReservation(UpdateReservationDTO dto) {
 
-		System.out.println("----------------------------hibernate analyze----------------------");
-
-		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
-
-		Reservation reservation = optional.orElseThrow();
-
 		Optional<Seat> optionalSeat = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
-		Seat seat = optionalSeat.orElseThrow();
-
-		System.out.println(dto.getOfficeBuildingId());
-		System.out.println(reservation.getSeat().getOfficeBuilding().getId());
+		Seat seat = optionalSeat.orElseThrow(() -> new SeatNotFoundException(translator.toLocale("seat_not_found")));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new ChairNotAvailableException(translator.toLocale("chair_forbidden"));
+			throw new SeatNotAvailableException(translator.toLocale("chair_forbidden"));
 		}
+
+		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
+
+		Reservation reservation = optional
+				.orElseThrow(() -> new ReservationNotFoundException(translator.toLocale("reservation_not_found")));
 
 		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
 				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {
 			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
 		}
-
-		System.out.println(reservation.getSeat().getReservation());
 
 		reservation.getSeat().getReservation().remove(reservation);
 		reservation.setSeat(seat);
@@ -166,9 +165,6 @@ public class ReservationServiceImpl implements ReservationService {
 
 		return reservationRepository.save(reservation);
 
-		// deleteReservation(dto.getId());
-
-		// return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
 	}
 
 }

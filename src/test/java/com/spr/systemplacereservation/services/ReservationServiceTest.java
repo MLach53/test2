@@ -2,19 +2,17 @@ package com.spr.systemplacereservation.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.spr.systemplacereservation.SystemplacereservationApplicationTests;
 import com.spr.systemplacereservation.entity.OfficeBuilding;
@@ -23,7 +21,9 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ChairNotAvailableException;
+import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
+import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
+import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.OfficeBuildingRepository;
 import com.spr.systemplacereservation.repository.ReservationRepository;
@@ -138,7 +138,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testMakeReservation() {
 
@@ -149,12 +148,11 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		Assertions.assertNotNull(reservation);
 	}
 
-	@Disabled
 	@Test
 	void testMakeReservationChairNotAvaliable() {
 
 		// then
-		Assertions.assertThrows(ChairNotAvailableException.class, () -> {
+		Assertions.assertThrows(SeatNotAvailableException.class, () -> {
 
 			// when
 			service.makeReservation(dtoTwo);
@@ -163,7 +161,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testMakeReservationUserAlreadyRegistered() {
 
@@ -181,9 +178,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
-	void testMakeReservationNoSuchElementException() {
+	void testMakeReservationSeatNotFound() {
 
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
@@ -197,7 +193,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setDate(LocalDate.of(2022, 8, 14));
 
 		// then
-		Assertions.assertThrows(NoSuchElementException.class, () -> {
+		Assertions.assertThrows(SeatNotFoundException.class, () -> {
 
 			// when
 			service.makeReservation(dto);
@@ -206,7 +202,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testMakeReservationDataIntegrityViolationException() {
 
@@ -224,7 +219,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testDeleteReservation() {
 
@@ -241,12 +235,11 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testDeleteReservationEmptyResultDateAccess() {
 
 		// then
-		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+		Assertions.assertThrows(ReservationNotFoundException.class, () -> {
 
 			// when
 			service.deleteReservation(-1);
@@ -255,7 +248,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testGetReservationsAtGivenDateAndSpan() {
 
@@ -263,9 +255,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		service.makeReservation(dtoOne);
 		service.makeReservation(dtoThree);
 
-		// dtoThree.setOfficeBuildingId(seatThree.getOfficeBuilding().getId());
-		// dtoThree.setSeatNumber(seatThree.getSeatNumber());
-		// dtoThree.setFloorNumber(seatThree.getFloorNumber());
 		dtoThree.setDate(LocalDate.of(2022, 8, 14));
 		dtoThree.setPersonId(4);
 
@@ -287,26 +276,6 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 		assertEquals(list1408.size(), betweenDates.get(LocalDate.of(2022, 8, 14)).size());
 		assertEquals(list1608.size(), betweenDates.get(LocalDate.of(2022, 8, 16)).size());
-
-	}
-
-	@Test
-	@Disabled
-	void testUpdateReservationOld() {
-
-		Reservation reservation = service.makeReservation(dtoThree);
-
-		UpdateReservationDTO dto = new UpdateReservationDTO();
-		dto.setDate(LocalDate.of(2022, 8, 13));
-		dto.setFloorNumber(seatOne.getFloorNumber());
-		dto.setSeatNumber(seatOne.getSeatNumber());
-		dto.setPersonId(reservation.getPersonId());
-		dto.setId(reservation.getId());
-		dto.setOfficeBuildingId(seatOne.getOfficeBuilding().getId());
-
-		Reservation updatedReservation = service.updateReservation(dto);
-
-		assertNotEquals(reservation, updatedReservation);
 
 	}
 
@@ -359,6 +328,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 		});
 
+		assertNotNull(repository.findById(reservation.getId()));
+
 	}
 
 	@Test
@@ -399,7 +370,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(seatSix.getOfficeBuilding().getId());
 
 		// then
-		Assertions.assertThrows(NoSuchElementException.class, () -> {
+		Assertions.assertThrows(ReservationNotFoundException.class, () -> {
 
 			// when
 			Reservation updatedReservation = service.updateReservation(dto);
@@ -422,7 +393,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(-1);
 
 		// then
-		Assertions.assertThrows(NoSuchElementException.class, () -> {
+		Assertions.assertThrows(SeatNotFoundException.class, () -> {
 
 			// when
 			Reservation updatedReservation = service.updateReservation(dto);
@@ -431,16 +402,20 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
-	@Disabled
 	@Test
 	void testUpdateReservationChairNotAvaliable() {
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
 		UpdateReservationDTO dto = new UpdateReservationDTO();
-		dto.setDate(LocalDate.of(0, 0, 0));
+		dto.setDate(LocalDate.of(2022, 8, 14));
+		dto.setFloorNumber(seatFour.getFloorNumber());
+		dto.setId(reservation.getId());
+		dto.setOfficeBuildingId(seatFour.getOfficeBuilding().getId());
+		dto.setPersonId(reservation.getPersonId());
+		dto.setSeatNumber(seatFour.getSeatNumber());
 
 		// then
-		Assertions.assertThrows(ChairNotAvailableException.class, () -> {
+		Assertions.assertThrows(SeatNotAvailableException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
