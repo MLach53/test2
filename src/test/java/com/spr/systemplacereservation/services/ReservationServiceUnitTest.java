@@ -1,7 +1,6 @@
 package com.spr.systemplacereservation.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +19,7 @@ import com.spr.systemplacereservation.entity.OfficeBuilding;
 import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
+import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 import com.spr.systemplacereservation.translator.TranslatorService;
@@ -114,13 +114,6 @@ class ReservationServiceUnitTest {
 
 	assertEquals(ret, res);
 
-	// when(reservationRepository.save(reservation)).thenReturn(reservation);
-	// when
-
-	// Reservation reservation2 = reservationService.makeReservation(dto);
-	// then
-	// assertEquals(reservation, reservation2);
-
     }
 
     @Test
@@ -137,6 +130,8 @@ class ReservationServiceUnitTest {
 		dto.getOfficeBuildingId())).thenReturn(Optional.empty());
 
 	Reservation r = reservationService.makeReservation(dto);
+
+	when(reservationRepository.findById(r.getId())).thenReturn(Optional.of(reservation));
 
 	// when
 
@@ -198,7 +193,27 @@ class ReservationServiceUnitTest {
 
     @Test
     void testUpdateReservation() {
-	fail("Not yet implemented");
+
+	// given
+	UpdateReservationDTO dto2 = UpdateReservationDTO.convertToDto(ret);
+	System.out.println(dto2.getId());
+	when(seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto2.getOfficeBuildingId(),
+		dto2.getSeatNumber(), dto2.getFloorNumber())).thenReturn(Optional.of(seat));
+
+	when(reservationRepository.findById(dto2.getId())).thenReturn(Optional.of(ret));
+
+	when(reservationRepository.save(ret)).thenReturn(ret);
+
+	// when
+
+	reservationService.updateReservation(dto2);
+
+	// then
+
+	verify(seatRepository).findByOfficeBuildingIdAndSeatNumberAndFloorNumber(dto2.getOfficeBuildingId(),
+		dto2.getSeatNumber(), dto2.getFloorNumber());
+	verify(reservationRepository).findById(dto2.getId());
+	verify(reservationRepository).save(ret);
     }
 
 }
