@@ -86,9 +86,7 @@ public class ReservationController {
 
 		} catch (EmptyResultDataAccessException | ReservationNotFoundException e) {
 
-			return new ResponseEntity<>(
-					e.getLocalizedMessage() + "\n" + translator.toLocale("reservation_delete_not_found"),
-					HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<>(translator.toLocale("reservation_deleted"), HttpStatus.OK);
