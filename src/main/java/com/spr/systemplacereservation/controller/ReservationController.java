@@ -28,6 +28,7 @@ import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
 import com.spr.systemplacereservation.exceptions.ChronologicalException;
+import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
 import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.services.ReservationService;
@@ -83,7 +84,7 @@ public class ReservationController {
 
 			service.deleteReservation(id);
 
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException | ReservationNotFoundException e) {
 
 			return new ResponseEntity<>(
 					e.getLocalizedMessage() + "\n" + translator.toLocale("reservation_delete_not_found"),
