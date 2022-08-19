@@ -78,8 +78,8 @@ public class ReservationServiceImpl implements ReservationService {
 	public void deleteReservation(Integer id) {
 		LOGGER.debug("attempting to delete reservation");
 
-		Reservation reservation = reservationRepository.findById(id)
-				.orElseThrow(() -> new ReservationNotFoundException(translator.toLocale("reservation_not_found")));
+		Reservation reservation = reservationRepository.findById(id).orElseThrow(
+				() -> new ReservationNotFoundException(translator.toLocale("reservation_delete_not_found")));
 
 		Seat seat = reservation.getSeat();
 
@@ -149,13 +149,13 @@ public class ReservationServiceImpl implements ReservationService {
 
 		if (!seat.getReservationeligible()) {
 
-			throw new SeatNotAvailableException(translator.toLocale("chair_forbidden"));
+			throw new SeatNotAvailableException(translator.toLocale("seat_forbidden"));
 		}
 
 		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
 
-		Reservation reservation = optional
-				.orElseThrow(() -> new ReservationNotFoundException(translator.toLocale("reservation_not_found")));
+		Reservation reservation = optional.orElseThrow(
+				() -> new ReservationNotFoundException(translator.toLocale("reservation_delete_not_found")));
 
 		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
 				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {

@@ -2,7 +2,6 @@ package com.spr.systemplacereservation.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -30,6 +29,7 @@ import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
 import com.spr.systemplacereservation.exceptions.ChronologicalException;
 import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
 import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
+import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.services.ReservationService;
 import com.spr.systemplacereservation.translator.TranslatorService;
@@ -62,11 +62,9 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
-		} catch (NoSuchElementException e) {
+		} catch (SeatNotFoundException e) {
 
-			return new ResponseEntity<>(
-					e.getMessage() + "\n" + translator.toLocale("reservation_not_existing_seat_or_else"),
-					HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		} catch (SeatNotAvailableException e) {
 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -127,11 +125,11 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
-		} catch (NoSuchElementException e) {
 
-			return new ResponseEntity<>(
-					e.getMessage() + "\n" + translator.toLocale("reservation_not_existing_seat_or_else"),
-					HttpStatus.NOT_FOUND);
+		} catch (SeatNotFoundException e) {
+
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
 		} catch (SeatNotAvailableException e) {
 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -139,6 +137,10 @@ public class ReservationController {
 		} catch (UserAlreadyReservedChairException e) {
 
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.LOCKED);
+
+		} catch (ReservationNotFoundException e) {
+
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 
 	}
