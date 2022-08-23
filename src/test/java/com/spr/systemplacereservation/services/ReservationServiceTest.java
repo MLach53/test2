@@ -138,6 +138,9 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 		// then
 		Assertions.assertNotNull(reservation);
+		Assertions.assertNotNull(reservation.getSeat());
+		Assertions.assertEquals(1, reservation.getSeat().getReservation().size());
+
 	}
 
 	@Test
@@ -150,6 +153,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 			service.makeReservation(dtoTwo);
 
 		});
+
+		Assertions.assertEquals(0, seatFour.getReservation().size());
 
 	}
 
@@ -167,6 +172,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 			service.makeReservation(dtoOne);
 
 		});
+
+		Assertions.assertEquals(1, seatOne.getReservation().size());
 
 	}
 
@@ -201,6 +208,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		service.makeReservation(dtoOne);
 		dtoOne.setPersonId(3);
 
+		int oldSize = seatOne.getReservation().size();
+
 		// then
 		Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
 
@@ -208,6 +217,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 			service.makeReservation(dtoOne);
 
 		});
+
+		Assertions.assertEquals(oldSize, seatOne.getReservation().size());
 
 	}
 
@@ -224,6 +235,8 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 			service.deleteReservation(reservation.getId());
 
 		});
+
+		assertEquals(0, seatOne.getReservation().size());
 
 	}
 
@@ -293,6 +306,11 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 		// then
 		assertNotEquals(oldSeatId, currentSeatId);
+
+		assertEquals(0, oldSeat.getReservation().size());
+		assertEquals(1, seatOne.getReservation().size());
+		assertEquals(updatedReservation, seatOne.getReservation().get(0));
+
 	}
 
 	@Test
@@ -321,6 +339,9 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		});
 
 		assertNotNull(repository.findById(reservation.getId()));
+		assertEquals(0, seatFive.getReservation().size());
+		assertEquals(1, seatOne.getReservation().size());
+		assertEquals(1, seatThree.getReservation().size());
 
 	}
 

@@ -65,11 +65,13 @@ public class ReservationServiceImpl implements ReservationService {
 
 		reservation.setDate(dto.getDate());
 		reservation.setPersonId(dto.getPersonId());
-
-		seat.getReservation().add(reservation);
 		reservation.setSeat(seat);
 
-		return reservationRepository.save(reservation);
+		reservationRepository.save(reservation);
+
+		seat.getReservation().add(reservation);
+
+		return reservation;
 
 	}
 
@@ -85,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		reservationRepository.delete(reservation);
 
-		// seat.getReservation().remove(reservation);
+		seat.getReservation().remove(reservation);
 
 	}
 
@@ -161,13 +163,14 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
 		}
 
-		reservation.getSeat().getReservation().remove(reservation);
 		reservation.setSeat(seat);
+		reservationRepository.save(reservation);
+
+		reservation.getSeat().getReservation().remove(reservation);
+
 		seat.getReservation().add(reservation);
 
-		seatRepository.save(seat);
-
-		return reservationRepository.save(reservation);
+		return reservation;
 
 	}
 
