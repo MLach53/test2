@@ -8,7 +8,6 @@ import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,11 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ChronologicalException;
-import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
-import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
-import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
-import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
+import com.spr.systemplacereservation.exceptions.BusinessLogicException;
 import com.spr.systemplacereservation.services.ReservationService;
 import com.spr.systemplacereservation.translator.TranslatorService;
 
@@ -62,18 +57,10 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
-		} catch (SeatNotFoundException e) {
+		} catch (BusinessLogicException e) {
 
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-		} catch (SeatNotAvailableException e) {
-
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-
-		} catch (UserAlreadyReservedChairException e) {
-
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.LOCKED);
+			return e.getEntity();
 		}
-
 	}
 
 	@DeleteMapping(path = "/reservation")
@@ -82,9 +69,9 @@ public class ReservationController {
 
 			service.deleteReservation(id);
 
-		} catch (EmptyResultDataAccessException | ReservationNotFoundException e) {
+		} catch (BusinessLogicException e) {
 
-			return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+			return e.getEntity();
 		}
 
 		return new ResponseEntity<>(translator.toLocale("reservation_deleted"), HttpStatus.OK);
@@ -105,8 +92,8 @@ public class ReservationController {
 		try {
 			return new ResponseEntity<>(service.getReserervationsAtGivenTimeSpan(startingDate, endingDate),
 					HttpStatus.OK);
-		} catch (ChronologicalException e) {
-			return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+		} catch (BusinessLogicException e) {
+			return e.getEntity();
 		}
 
 	}
@@ -126,23 +113,11 @@ public class ReservationController {
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
 
-		} catch (SeatNotFoundException e) {
+		} catch (BusinessLogicException e) {
 
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+			return e.getEntity();
 
-		} catch (SeatNotAvailableException e) {
-
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-
-		} catch (UserAlreadyReservedChairException e) {
-
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.LOCKED);
-
-		} catch (ReservationNotFoundException e) {
-
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 }

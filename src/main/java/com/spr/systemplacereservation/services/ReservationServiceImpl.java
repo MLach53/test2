@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.spr.systemplacereservation.entity.Reservation;
@@ -18,11 +19,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ChronologicalException;
-import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
-import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
-import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
-import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
+import com.spr.systemplacereservation.exceptions.BusinessLogicException;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 import com.spr.systemplacereservation.translator.TranslatorService;
@@ -50,15 +47,16 @@ public class ReservationServiceImpl implements ReservationService {
 		Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
-		Seat seat = optional.orElseThrow(() -> new SeatNotFoundException(translator.toLocale("seat_not_found")));
+		Seat seat = optional.orElseThrow(
+				() -> new BusinessLogicException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new SeatNotAvailableException(translator.toLocale("seat_forbidden"));
+			throw new BusinessLogicException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
 		}
 
 		if (userAlreadyHasReservationInBuilding(dto)) {
-			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
+			throw new BusinessLogicException("user_has_already_reserved_for_this_building", HttpStatus.LOCKED);
 		}
 
 		Reservation reservation = new Reservation();
@@ -67,11 +65,11 @@ public class ReservationServiceImpl implements ReservationService {
 		reservation.setPersonId(dto.getPersonId());
 		reservation.setSeat(seat);
 
-		reservationRepository.save(reservation);
+		Reservation reservationR = reservationRepository.save(reservation);
 
-		seat.getReservation().add(reservation);
+		seat.getReservation().add(reservationR);
 
-		return reservation;
+		return reservationR;
 
 	}
 
@@ -80,8 +78,9 @@ public class ReservationServiceImpl implements ReservationService {
 	public void deleteReservation(Integer id) {
 		LOGGER.debug("attempting to delete reservation");
 
-		Reservation reservation = reservationRepository.findById(id).orElseThrow(
-				() -> new ReservationNotFoundException(translator.toLocale("reservation_delete_not_found")));
+		Reservation reservation = reservationRepository.findById(id)
+				.orElseThrow(() -> new BusinessLogicException(translator.toLocale("reservation_delete_not_found"),
+						HttpStatus.NOT_FOUND));
 
 		Seat seat = reservation.getSeat();
 
@@ -114,7 +113,8 @@ public class ReservationServiceImpl implements ReservationService {
 			LocalDate endingDate) {
 
 		if (startingDate.isAfter(endingDate)) {
-			throw new ChronologicalException(translator.toLocale("starting_date_after_ending_date"));
+			throw new BusinessLogicException(translator.toLocale("starting_date_after_ending_date"),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		Map<LocalDate, List<ReservationWithoutDateDTO>> map = new HashMap<>();
@@ -146,21 +146,23 @@ public class ReservationServiceImpl implements ReservationService {
 		Optional<Seat> optionalSeat = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
-		Seat seat = optionalSeat.orElseThrow(() -> new SeatNotFoundException(translator.toLocale("seat_not_found")));
+		Seat seat = optionalSeat.orElseThrow(
+				() -> new BusinessLogicException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new SeatNotAvailableException(translator.toLocale("seat_forbidden"));
+			throw new BusinessLogicException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
 		}
 
 		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
 
-		Reservation reservation = optional.orElseThrow(
-				() -> new ReservationNotFoundException(translator.toLocale("reservation_delete_not_found")));
+		Reservation reservation = optional
+				.orElseThrow(() -> new BusinessLogicException(translator.toLocale("reservation_delete_not_found"),
+						HttpStatus.NOT_FOUND));
 
 		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
 				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {
-			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
+			throw new BusinessLogicException("user_has_already_reserved_for_this_building", HttpStatus.LOCKED);
 		}
 
 		System.out.println();
