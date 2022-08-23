@@ -14,15 +14,15 @@ import com.spr.systemplacereservation.entity.Reservation;
 @Repository
 public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
 
-	// @Query(value = "select r, s from Reservation inner join Seat s on r.seatId =
-	// s")
-
 	@Query(value = "select r,s from Reservation r left outer join Seat s on s.id = r.seat.id where s.officeBuilding.id = :officeBuildingId AND r.personId= :personId AND r.date=:date")
 	Optional<Reservation> findFirstByDateAndPersonIdAndOfficeBuildingId(@Param(value = "date") LocalDate date,
 			@Param(value = "personId") Integer personId, @Param(value = "officeBuildingId") Integer officeBuildingId);
 
-	List<Reservation> findByDate(LocalDate date);
+	@Query(value = "select r,s from Reservation r left outer join Seat s on s.id = r.seat.id where r.date = :date")
+	List<Reservation> findByDate(@Param(value = "date") LocalDate date);
 
-	List<Reservation> findByDateBetween(LocalDate startingDate, LocalDate endingDate);
+	@Query(value = "select r,s from Reservation r left outer join Seat s on s.id = r.seat.id where r.date between :startingDate AND :endingDate")
+	List<Reservation> findByDateBetween(@Param(value = "startingDate") LocalDate startingDate,
+			@Param(value = "endingDate") LocalDate endingDate);
 
 }

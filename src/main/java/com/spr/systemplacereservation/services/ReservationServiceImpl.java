@@ -85,9 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
 
 		reservationRepository.delete(reservation);
 
-		seat.getReservation().remove(reservation);
+		// seat.getReservation().remove(reservation);
 
-		seatRepository.save(seat);
 	}
 
 	public boolean userAlreadyHasReservationInBuilding(ReservationDTO dto) {
@@ -113,7 +112,7 @@ public class ReservationServiceImpl implements ReservationService {
 			LocalDate endingDate) {
 
 		if (startingDate.isAfter(endingDate)) {
-			throw new ChronologicalException("starting_date_after_ending_date");
+			throw new ChronologicalException(translator.toLocale("starting_date_after_ending_date"));
 		}
 
 		Map<LocalDate, List<ReservationWithoutDateDTO>> map = new HashMap<>();
