@@ -19,7 +19,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.BusinessLogicException;
+import com.spr.systemplacereservation.exceptions.ValidationException;
 import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 import com.spr.systemplacereservation.translator.TranslatorService;
@@ -42,21 +42,21 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	@Transactional
-	public Reservation makeReservation(ReservationDTO dto) {
+	public Reservation makeReservation(ReservationDTO dto) throws ValidationException {
 
 		Optional<Seat> optional = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
 		Seat seat = optional.orElseThrow(
-				() -> new BusinessLogicException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
+				() -> new ValidationException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new BusinessLogicException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
+			throw new ValidationException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
 		}
 
 		if (userAlreadyHasReservationInBuilding(dto)) {
-			throw new BusinessLogicException("user_has_already_reserved_for_this_building", HttpStatus.LOCKED);
+			throw new ValidationException("user_has_already_reserved_for_this_building", HttpStatus.LOCKED);
 		}
 
 		Reservation reservation = new Reservation();
@@ -75,18 +75,18 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	@Transactional
-	public void deleteReservation(Integer id) {
+	public void deleteReservation(Integer id) throws ValidationException {
 		LOGGER.debug("attempting to delete reservation");
 
 		Reservation reservation = reservationRepository.findById(id)
-				.orElseThrow(() -> new BusinessLogicException(translator.toLocale("reservation_delete_not_found"),
+				.orElseThrow(() -> new ValidationException(translator.toLocale("reservation_delete_not_found"),
 						HttpStatus.NOT_FOUND));
 
 		Seat seat = reservation.getSeat();
 
-		reservationRepository.delete(reservation);
-
 		seat.getReservation().remove(reservation);
+
+		reservationRepository.delete(reservation);
 
 	}
 
@@ -101,7 +101,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	@Transactional
-	public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) {
+	public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) throws ValidationException {
 
 		return reservationRepository.findByDate(date).stream().map(ReservationDTO::convertToDto).toList();
 
@@ -110,10 +110,10 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	@Transactional
 	public Map<LocalDate, List<ReservationWithoutDateDTO>> getReserervationsAtGivenTimeSpan(LocalDate startingDate,
-			LocalDate endingDate) {
+			LocalDate endingDate) throws ValidationException {
 
 		if (startingDate.isAfter(endingDate)) {
-			throw new BusinessLogicException(translator.toLocale("starting_date_after_ending_date"),
+			throw new ValidationException(translator.toLocale("starting_date_after_ending_date"),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -133,7 +133,7 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Transactional
-	public Reservation updateReservationOld(UpdateReservationDTO dto) {
+	public Reservation updateReservationOld(UpdateReservationDTO dto) throws ValidationException {
 		deleteReservation(dto.getId());
 
 		return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
@@ -141,28 +141,28 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	@Transactional
-	public Reservation updateReservation(UpdateReservationDTO dto) {
+	public Reservation updateReservation(UpdateReservationDTO dto) throws ValidationException {
 
 		Optional<Seat> optionalSeat = seatRepository.findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
 				dto.getOfficeBuildingId(), dto.getSeatNumber(), dto.getFloorNumber());
 
 		Seat seat = optionalSeat.orElseThrow(
-				() -> new BusinessLogicException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
+				() -> new ValidationException(translator.toLocale("seat_not_found"), HttpStatus.NOT_FOUND));
 
 		if (!seat.getReservationeligible()) {
 
-			throw new BusinessLogicException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
+			throw new ValidationException(translator.toLocale("seat_forbidden"), HttpStatus.FORBIDDEN);
 		}
 
 		Optional<Reservation> optional = reservationRepository.findById(dto.getId());
 
 		Reservation reservation = optional
-				.orElseThrow(() -> new BusinessLogicException(translator.toLocale("reservation_delete_not_found"),
+				.orElseThrow(() -> new ValidationException(translator.toLocale("reservation_delete_not_found"),
 						HttpStatus.NOT_FOUND));
 
 		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
 				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {
-			throw new BusinessLogicException(translator.toLocale("user_has_already_reserved_for_this_building"),
+			throw new ValidationException(translator.toLocale("user_has_already_reserved_for_this_building"),
 					HttpStatus.LOCKED);
 		}
 

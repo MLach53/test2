@@ -1,7 +1,6 @@
 package com.spr.systemplacereservation.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spr.systemplacereservation.entity.Reservation;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.BusinessLogicException;
+import com.spr.systemplacereservation.exceptions.ValidationException;
 import com.spr.systemplacereservation.services.ReservationService;
 import com.spr.systemplacereservation.translator.TranslatorService;
 
@@ -57,7 +56,7 @@ public class ReservationController {
 			return new ResponseEntity<>(
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
-		} catch (BusinessLogicException e) {
+		} catch (ValidationException e) {
 
 			return e.getResponseEntity();
 		}
@@ -69,7 +68,7 @@ public class ReservationController {
 
 			service.deleteReservation(id);
 
-		} catch (BusinessLogicException e) {
+		} catch (ValidationException e) {
 
 			return e.getResponseEntity();
 		}
@@ -79,9 +78,15 @@ public class ReservationController {
 	}
 
 	@GetMapping(path = "/reservation/byOneDate")
-	public ResponseEntity<List<ReservationDTO>> getReservationsAtGivenDate(
+	public ResponseEntity<Object> getReservationsAtGivenDate(
 			@RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-		return new ResponseEntity<>(service.getReservationsAtGivenDate(date), HttpStatus.OK);
+		try {
+
+			return new ResponseEntity<>(service.getReservationsAtGivenDate(date), HttpStatus.OK);
+		} catch (ValidationException e) {
+			return e.getResponseEntity();
+		}
+
 	}
 
 	@GetMapping(path = "/reservation")
@@ -92,7 +97,7 @@ public class ReservationController {
 		try {
 			return new ResponseEntity<>(service.getReserervationsAtGivenTimeSpan(startingDate, endingDate),
 					HttpStatus.OK);
-		} catch (BusinessLogicException e) {
+		} catch (ValidationException e) {
 			return e.getResponseEntity();
 		}
 
@@ -113,7 +118,7 @@ public class ReservationController {
 					e.getMessage() + "\n" + translator.toLocale("reservation_post_constraint_violation"),
 					HttpStatus.CONFLICT);
 
-		} catch (BusinessLogicException e) {
+		} catch (ValidationException e) {
 
 			return e.getResponseEntity();
 

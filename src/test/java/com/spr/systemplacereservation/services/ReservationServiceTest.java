@@ -21,7 +21,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.BusinessLogicException;
+import com.spr.systemplacereservation.exceptions.ValidationException;
 import com.spr.systemplacereservation.repository.OfficeBuildingRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 
@@ -128,7 +128,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testMakeReservation() {
+	void testMakeReservation() throws ValidationException {
 
 		// when
 		Reservation reservation = service.makeReservation(dtoOne);
@@ -144,7 +144,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationChairNotAvaliable() {
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.makeReservation(dtoTwo);
@@ -156,14 +156,14 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testMakeReservationUserAlreadyRegistered() {
+	void testMakeReservationUserAlreadyRegistered() throws ValidationException {
 
 		// given
 		service.makeReservation(dtoOne);
 		dtoOne.setSeatNumber(seatTwo.getSeatNumber());
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.makeReservation(dtoOne);
@@ -175,7 +175,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testMakeReservationSeatNotFound() {
+	void testMakeReservationSeatNotFound() throws ValidationException {
 
 		// given
 		service.makeReservation(dtoOne);
@@ -189,7 +189,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setDate(LocalDate.of(2022, 8, 14));
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.makeReservation(dto);
@@ -199,7 +199,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testMakeReservationDataIntegrityViolationException() {
+	void testMakeReservationDataIntegrityViolationException() throws ValidationException {
 
 		// given
 		service.makeReservation(dtoOne);
@@ -220,7 +220,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testDeleteReservation() {
+	void testDeleteReservation() throws ValidationException {
 
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
@@ -238,10 +238,10 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testDeleteReservationEmptyResultDateAccess() {
+	void testDeleteReservationEmptyResultDateAccess() throws ValidationException {
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.deleteReservation(-1);
@@ -251,7 +251,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testGetReservationsAtGivenDateAndSpan() {
+	void testGetReservationsAtGivenDateAndSpan() throws ValidationException {
 
 		// given
 		service.makeReservation(dtoOne);
@@ -282,7 +282,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservation() {
+	void testUpdateReservation() throws ValidationException {
 
 		// given
 		Reservation reservation = service.makeReservation(dtoThree);
@@ -311,7 +311,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationUserAlreadyRegistered() {
+	void testUpdateReservationUserAlreadyRegistered() throws ValidationException {
 
 		// given
 		dtoThree.setDate(dtoOne.getDate());
@@ -328,7 +328,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(seatFive.getOfficeBuilding().getId());
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -344,7 +344,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationSwitchSeatsSameDateSameBuilding() {
+	void testUpdateReservationSwitchSeatsSameDateSameBuilding() throws ValidationException {
 
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
@@ -369,7 +369,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationNonExistentReservationId() {
+	void testUpdateReservationNonExistentReservationId() throws ValidationException {
 
 		// given
 		UpdateReservationDTO dto = new UpdateReservationDTO();
@@ -381,7 +381,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(seatSix.getOfficeBuilding().getId());
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -391,7 +391,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationNonExistentSeat() {
+	void testUpdateReservationNonExistentSeat() throws ValidationException {
 
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
@@ -404,7 +404,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(-1);
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -414,7 +414,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationChairNotAvaliable() {
+	void testUpdateReservationChairNotAvaliable() throws ValidationException {
 		// given
 		Reservation reservation = service.makeReservation(dtoOne);
 		UpdateReservationDTO dto = new UpdateReservationDTO();
@@ -426,7 +426,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setSeatNumber(seatFour.getSeatNumber());
 
 		// then
-		Assertions.assertThrows(BusinessLogicException.class, () -> {
+		Assertions.assertThrows(ValidationException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -436,7 +436,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	}
 
 	@Test
-	void testUpdateReservationDataIntegrityViolationException() {
+	void testUpdateReservationDataIntegrityViolationException() throws ValidationException {
 
 		// given
 		service.makeReservation(dtoOne);
