@@ -435,4 +435,24 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 
 	}
 
+	@Test
+	void testUpdateReservationDataIntegrityViolationException() {
+
+		// given
+		service.makeReservation(dtoOne);
+		dtoOne.setPersonId(1);
+
+		int oldSize = seatOne.getReservation().size();
+
+		// then
+		Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+
+			// when
+			service.makeReservation(dtoOne);
+
+		});
+
+		Assertions.assertEquals(oldSize, seatOne.getReservation().size());
+
+	}
 }

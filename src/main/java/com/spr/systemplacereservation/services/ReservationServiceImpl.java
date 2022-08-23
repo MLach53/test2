@@ -162,15 +162,16 @@ public class ReservationServiceImpl implements ReservationService {
 
 		if (userAlreadyHasReservationInBuilding(ReservationDTO.convertToDtoFromUpdateDto(dto))
 				&& !(reservation.getSeat().getOfficeBuilding().getId().equals(dto.getOfficeBuildingId()))) {
-			throw new BusinessLogicException("user_has_already_reserved_for_this_building", HttpStatus.LOCKED);
+			throw new BusinessLogicException(translator.toLocale("user_has_already_reserved_for_this_building"),
+					HttpStatus.LOCKED);
 		}
 
-		System.out.println();
+		Seat oldSeat = reservation.getSeat();
 
 		reservation.setSeat(seat);
 		reservationRepository.save(reservation);
 
-		reservation.getSeat().getReservation().remove(reservation);
+		oldSeat.getReservation().remove(reservation);
 
 		seat.getReservation().add(reservation);
 
