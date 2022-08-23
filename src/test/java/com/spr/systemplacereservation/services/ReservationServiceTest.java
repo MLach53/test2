@@ -343,6 +343,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		assertEquals(1, seatOne.getReservation().size());
 		assertEquals(1, seatThree.getReservation().size());
 
+		System.out.println();
 	}
 
 	@Test

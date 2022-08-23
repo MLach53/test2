@@ -163,6 +163,8 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new UserAlreadyReservedChairException("user_has_already_reserved_for_this_building");
 		}
 
+		System.out.println();
+
 		reservation.setSeat(seat);
 		reservationRepository.save(reservation);
 
