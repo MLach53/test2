@@ -21,10 +21,7 @@ import com.spr.systemplacereservation.entity.Seat;
 import com.spr.systemplacereservation.entity.dto.ReservationDTO;
 import com.spr.systemplacereservation.entity.dto.ReservationWithoutDateDTO;
 import com.spr.systemplacereservation.entity.dto.UpdateReservationDTO;
-import com.spr.systemplacereservation.exceptions.ReservationNotFoundException;
-import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
-import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
-import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
+import com.spr.systemplacereservation.exceptions.BusinessLogicException;
 import com.spr.systemplacereservation.repository.OfficeBuildingRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 
@@ -147,7 +144,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationChairNotAvaliable() {
 
 		// then
-		Assertions.assertThrows(SeatNotAvailableException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.makeReservation(dtoTwo);
@@ -166,7 +163,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dtoOne.setSeatNumber(seatTwo.getSeatNumber());
 
 		// then
-		Assertions.assertThrows(UserAlreadyReservedChairException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.makeReservation(dtoOne);
@@ -192,7 +189,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setDate(LocalDate.of(2022, 8, 14));
 
 		// then
-		Assertions.assertThrows(SeatNotFoundException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.makeReservation(dto);
@@ -244,7 +241,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testDeleteReservationEmptyResultDateAccess() {
 
 		// then
-		Assertions.assertThrows(ReservationNotFoundException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.deleteReservation(-1);
@@ -331,7 +328,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(seatFive.getOfficeBuilding().getId());
 
 		// then
-		Assertions.assertThrows(UserAlreadyReservedChairException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -384,7 +381,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(seatSix.getOfficeBuilding().getId());
 
 		// then
-		Assertions.assertThrows(ReservationNotFoundException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -407,7 +404,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setOfficeBuildingId(-1);
 
 		// then
-		Assertions.assertThrows(SeatNotFoundException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
@@ -429,7 +426,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		dto.setSeatNumber(seatFour.getSeatNumber());
 
 		// then
-		Assertions.assertThrows(SeatNotAvailableException.class, () -> {
+		Assertions.assertThrows(BusinessLogicException.class, () -> {
 
 			// when
 			service.updateReservation(dto);
