@@ -59,7 +59,7 @@ public class ReservationController {
 					HttpStatus.CONFLICT);
 		} catch (BusinessLogicException e) {
 
-			return e.getEntity();
+			return e.getResponseEntity();
 		}
 	}
 
@@ -71,7 +71,7 @@ public class ReservationController {
 
 		} catch (BusinessLogicException e) {
 
-			return e.getEntity();
+			return e.getResponseEntity();
 		}
 
 		return new ResponseEntity<>(translator.toLocale("reservation_deleted"), HttpStatus.OK);
@@ -93,7 +93,7 @@ public class ReservationController {
 			return new ResponseEntity<>(service.getReserervationsAtGivenTimeSpan(startingDate, endingDate),
 					HttpStatus.OK);
 		} catch (BusinessLogicException e) {
-			return e.getEntity();
+			return e.getResponseEntity();
 		}
 
 	}
@@ -115,7 +115,7 @@ public class ReservationController {
 
 		} catch (BusinessLogicException e) {
 
-			return e.getEntity();
+			return e.getResponseEntity();
 
 		}
 	}

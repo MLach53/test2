@@ -25,7 +25,7 @@ public class BusinessLogicException extends RuntimeException {
 		this.httpStatus = httpStatus;
 	}
 
-	public ResponseEntity<Object> getEntity() {
+	public ResponseEntity<Object> getResponseEntity() {
 		return new ResponseEntity<>(super.getMessage(), httpStatus);
 	}
 
