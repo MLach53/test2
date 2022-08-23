@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -39,11 +38,6 @@ public class Reservation {
 	@Column(name = "created_on")
 	@CreationTimestamp
 	private LocalDate creationOn;
-
-	@PrePersist
-	protected void onCreate() {
-		// creationOn = LocalDate.now();
-	}
 
 	public Integer getId() {
 		return id;

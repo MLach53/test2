@@ -26,14 +26,9 @@ import com.spr.systemplacereservation.exceptions.SeatNotAvailableException;
 import com.spr.systemplacereservation.exceptions.SeatNotFoundException;
 import com.spr.systemplacereservation.exceptions.UserAlreadyReservedChairException;
 import com.spr.systemplacereservation.repository.OfficeBuildingRepository;
-import com.spr.systemplacereservation.repository.ReservationRepository;
 import com.spr.systemplacereservation.repository.SeatRepository;
 
 class ReservationServiceTest extends SystemplacereservationApplicationTests {
-
-	private Reservation one;
-	private Reservation two;
-	private Reservation three;
 
 	private OfficeBuilding building;
 	private OfficeBuilding buildingTwo;
@@ -48,14 +43,11 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	private ReservationDTO dtoOne;
 	private ReservationDTO dtoTwo;
 	private ReservationDTO dtoThree;
-	private ReservationDTO dtoFour;
 
 	@Autowired
 	private OfficeBuildingRepository repository;
 	@Autowired
 	private SeatRepository seatRepository;
-	@Autowired
-	private ReservationRepository reservationRepository;
 
 	@Autowired
 	private ReservationServiceImpl service;
@@ -165,7 +157,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationUserAlreadyRegistered() {
 
 		// given
-		Reservation reservation = service.makeReservation(dtoOne);
+		service.makeReservation(dtoOne);
 		dtoOne.setSeatNumber(seatTwo.getSeatNumber());
 
 		// then
@@ -182,7 +174,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationSeatNotFound() {
 
 		// given
-		Reservation reservation = service.makeReservation(dtoOne);
+		service.makeReservation(dtoOne);
 		dtoOne.setSeatNumber(seatTwo.getSeatNumber());
 
 		ReservationDTO dto = new ReservationDTO();
@@ -206,7 +198,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 	void testMakeReservationDataIntegrityViolationException() {
 
 		// given
-		Reservation reservation = service.makeReservation(dtoOne);
+		service.makeReservation(dtoOne);
 		dtoOne.setPersonId(3);
 
 		// then
@@ -324,7 +316,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		Assertions.assertThrows(UserAlreadyReservedChairException.class, () -> {
 
 			// when
-			Reservation updatedReservation = service.updateReservation(dto);
+			service.updateReservation(dto);
 
 		});
 
@@ -373,7 +365,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		Assertions.assertThrows(ReservationNotFoundException.class, () -> {
 
 			// when
-			Reservation updatedReservation = service.updateReservation(dto);
+			service.updateReservation(dto);
 
 		});
 
@@ -396,7 +388,7 @@ class ReservationServiceTest extends SystemplacereservationApplicationTests {
 		Assertions.assertThrows(SeatNotFoundException.class, () -> {
 
 			// when
-			Reservation updatedReservation = service.updateReservation(dto);
+			service.updateReservation(dto);
 
 		});
 
