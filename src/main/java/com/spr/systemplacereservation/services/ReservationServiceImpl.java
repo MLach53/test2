@@ -66,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		Reservation reservationR = reservationRepository.save(reservation);
 
-		seat.getReservation().add(reservationR);
+		// seat.getReservation().add(reservationR);
 
 		return reservationR;
 
@@ -83,7 +83,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		Seat seat = reservation.getSeat();
 
-		seat.getReservation().remove(reservation);
+		// seat.getReservation().remove(reservation);
 
 		reservationRepository.delete(reservation);
 
@@ -133,7 +133,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Transactional
 	public Reservation updateReservationOld(UpdateReservationDTO dto) throws ValidationException {
-		deleteReservation(dto.getId());
+		// deleteReservation(dto.getId());
 
 		return makeReservation(ReservationDTO.convertToDtoFromUpdateDto(dto));
 	}
@@ -170,9 +170,9 @@ public class ReservationServiceImpl implements ReservationService {
 		reservation.setSeat(seat);
 		reservationRepository.save(reservation);
 
-		oldSeat.getReservation().remove(reservation);
+		// oldSeat.getReservation().remove(reservation);
 
-		seat.getReservation().add(reservation);
+		// seat.getReservation().add(reservation);
 
 		return reservation;
 

@@ -14,7 +14,7 @@ public class UpdateReservationDTO {
 
 	@NotNull
 	@Min(1)
-	private Integer officeBuildingId;
+	private String officeBuildingId;
 
 	@NotNull
 	private Integer floorNumber;
@@ -38,7 +38,7 @@ public class UpdateReservationDTO {
 				reservation.getPersonId(), reservation.getId());
 	}
 
-	public UpdateReservationDTO(@NotNull @Min(1) Integer officeBuildingId, @NotNull Integer floorNumber,
+	public UpdateReservationDTO(@NotNull @Min(1) String officeBuildingId, @NotNull Integer floorNumber,
 			@NotEmpty String seatNumber, @NotNull LocalDate date, @NotNull Integer personId, Integer id) {
 		super();
 		this.officeBuildingId = officeBuildingId;
@@ -53,11 +53,11 @@ public class UpdateReservationDTO {
 		super();
 	}
 
-	public Integer getOfficeBuildingId() {
+	public String getOfficeBuildingId() {
 		return officeBuildingId;
 	}
 
-	public void setOfficeBuildingId(Integer officeBuildingId) {
+	public void setOfficeBuildingId(String officeBuildingId) {
 		this.officeBuildingId = officeBuildingId;
 	}
 

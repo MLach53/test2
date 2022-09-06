@@ -2,18 +2,14 @@ package com.spr.systemplacereservation.repository;
 
 import java.util.Optional;
 
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import com.spr.systemplacereservation.entity.Seat;
 
 @Repository
-public interface SeatRepository extends CrudRepository<Seat, Integer> {
+public interface SeatRepository extends MongoRepository<Seat, Integer> {
 
-	@Query(value = "select s,o from Seat s left outer join OfficeBuilding o on s.officeBuilding.id = o.id where o.id = :officeBuildingId AND s.seatNumber= :seatNumber AND s.floorNumber=:floorNumber")
-	Optional<Seat> findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
-			@Param("officeBuildingId") Integer officeBuildingId, @Param("seatNumber") String seatNumber,
-			@Param("floorNumber") Integer floorNumber);
+	Optional<Seat> findByOfficeBuildingIdAndSeatNumberAndFloorNumber(String officeBuildingId, String seatNumber,
+			Integer floorNumber);
 }

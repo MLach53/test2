@@ -12,7 +12,7 @@ public class ReservationWithoutDateDTO {
 
 	@NotNull
 	@Min(1)
-	protected Integer officeBuildingId;
+	protected String officeBuildingId;
 
 	@NotNull
 	protected Integer floorNumber;
@@ -33,7 +33,7 @@ public class ReservationWithoutDateDTO {
 				reservation.getPersonId(), reservation.getId(), reservation.getCreationDate());
 	}
 
-	public ReservationWithoutDateDTO(@NotNull @Min(1) Integer officeBuildingId, @NotNull Integer floorNumber,
+	public ReservationWithoutDateDTO(@NotNull @Min(1) String officeBuildingId, @NotNull Integer floorNumber,
 			@NotEmpty String seatNumber, @NotNull Integer personId, Integer id, LocalDate createdOn) {
 		super();
 		this.officeBuildingId = officeBuildingId;
@@ -48,11 +48,11 @@ public class ReservationWithoutDateDTO {
 		super();
 	}
 
-	public Integer getOfficeBuildingId() {
+	public String getOfficeBuildingId() {
 		return officeBuildingId;
 	}
 
-	public void setOfficeBuildingId(Integer officeBuildingId) {
+	public void setOfficeBuildingId(String officeBuildingId) {
 		this.officeBuildingId = officeBuildingId;
 	}
 

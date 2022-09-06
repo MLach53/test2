@@ -4,34 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "OFFICEBUILDING")
+@Document(collection = "OFFICEBUILDING")
 public class OfficeBuilding {
 
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	// @Column(name = "id")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+	private String id;
 
-	@Column(name = "name")
+	// @Column(name = "name")
 	private String name;
 
-	@OneToMany(mappedBy = "officeBuilding")
+	// @OneToMany(mappedBy = "officeBuilding")
+	@DBRef
 	private List<Seat> seats = new ArrayList<>();
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -1,50 +1,29 @@
 package com.spr.systemplacereservation.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "SEAT", uniqueConstraints = {
-		@UniqueConstraint(name = "UC_SEAT", columnNames = { "officebuilding_id", "floor_number", "seat_number" }) })
+@Document(collection = "SEAT")
 public class Seat {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "officebuilding_id")
+	@DBRef
 	private OfficeBuilding officeBuilding;
 
-	@Column(name = "floor_number")
 	private Integer floorNumber;
 
-	@Column(name = "seat_number")
 	private String seatNumber;
 
-	@Column(name = "reservationeligible")
 	private boolean reservationEligible;
 
-	@Column(name = "redescription")
 	private String reDescription;
 
-	@OneToMany(mappedBy = "seat")
-	private List<Reservation> reservation = new ArrayList<>();
+	// private List<Reservation> reservation = new ArrayList<>();
 
 	public Integer getId() {
 		return id;
@@ -78,14 +57,6 @@ public class Seat {
 		this.seatNumber = seatNumber;
 	}
 
-	public List<Reservation> getReservation() {
-		return reservation;
-	}
-
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
-	}
-
 	public boolean getReservationeligible() {
 		return reservationEligible;
 	}
@@ -111,8 +82,7 @@ public class Seat {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(floorNumber, id, officeBuilding, reDescription, reservation, reservationEligible,
-				seatNumber);
+		return Objects.hash(floorNumber, id, officeBuilding, reDescription, reservationEligible, seatNumber);
 	}
 
 	@Override
@@ -126,7 +96,7 @@ public class Seat {
 		Seat other = (Seat) obj;
 		return Objects.equals(floorNumber, other.floorNumber) && Objects.equals(id, other.id)
 				&& Objects.equals(officeBuilding, other.officeBuilding)
-				&& Objects.equals(reDescription, other.reDescription) && Objects.equals(reservation, other.reservation)
+				&& Objects.equals(reDescription, other.reDescription)
 				&& Objects.equals(reservationEligible, other.reservationEligible)
 				&& Objects.equals(seatNumber, other.seatNumber);
 	}
