@@ -41,6 +41,8 @@ public class ReservationController {
 	@PostMapping(path = "/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> makeReservation(@RequestBody @Valid ReservationDTO dto) {
 
+		System.out.println(dto);
+		
 		try {
 			Reservation reservation = service.makeReservation(dto);
 

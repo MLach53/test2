@@ -2,6 +2,8 @@ package com.spr.systemplacereservation.entity;
 
 import java.util.Objects;
 
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,38 +13,39 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Seat {
 
 	@Id
-	private String id;
+	private ObjectId id;
 
-	@DBRef
-	@Field(name = "officebuildign_id")
+	@Field(value = "officebuilding_id")
+	private ObjectId officeBuildingId;
+
 	private OfficeBuilding officeBuilding;
-
-	@Field(name = "floor_number")
+	
+	@Field(value = "floor_number")
 	private Integer floorNumber;
 
-	@Field(name = "seat_number")
+	@Field(value = "seat_number")
 	private String seatNumber;
 
-	@Field(name = "reservationeligible")
-	private boolean reservationEligible;
+	@Field(value = "re")
+	private boolean reservationEligible = true;
 
-	@Field(name = "description")
+	@Field(value = "description")
 	private String reDescription;
 
-	public OfficeBuilding getOfficeBuilding() {
-		return officeBuilding;
-	}
-
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 
-	public void setOfficeBuilding(OfficeBuilding officeBuilding) {
-		this.officeBuilding = officeBuilding;
+	public ObjectId getOfficeBuildingId() {
+		return officeBuildingId;
+	}
+
+	public void setOfficeBuildingId(ObjectId officeBuilding) {
+		this.officeBuildingId = officeBuilding;
 	}
 
 	public Integer getFloorNumber() {
@@ -77,16 +80,18 @@ public class Seat {
 		this.reDescription = reDescription;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "Seat [id=" + id + ", officeBuilding=" + officeBuilding + ", flooNumber=" + floorNumber + ", seatNumber="
-				+ seatNumber + ", reservationeligible=" + reservationEligible + ", reDescription=" + reDescription
-				+ "]";
+		return "Seat [id=" + id + ", officeBuildingId=" + officeBuildingId + ", officeBuilding=" + officeBuilding
+				+ ", floorNumber=" + floorNumber + ", seatNumber=" + seatNumber + ", reservationEligible="
+				+ reservationEligible + ", reDescription=" + reDescription + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(floorNumber, id, officeBuilding, reDescription, reservationEligible, seatNumber);
+		return Objects.hash(floorNumber, id, officeBuildingId, reDescription, reservationEligible, seatNumber);
 	}
 
 	@Override
@@ -99,7 +104,7 @@ public class Seat {
 			return false;
 		Seat other = (Seat) obj;
 		return Objects.equals(floorNumber, other.floorNumber) && Objects.equals(id, other.id)
-				&& Objects.equals(officeBuilding, other.officeBuilding)
+				&& Objects.equals(officeBuildingId, other.officeBuildingId)
 				&& Objects.equals(reDescription, other.reDescription)
 				&& Objects.equals(reservationEligible, other.reservationEligible)
 				&& Objects.equals(seatNumber, other.seatNumber);

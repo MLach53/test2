@@ -13,7 +13,6 @@ import com.spr.systemplacereservation.entity.Reservation;
 public class UpdateReservationDTO {
 
 	@NotNull
-	@Min(1)
 	private String officeBuildingId;
 
 	@NotNull
@@ -33,8 +32,8 @@ public class UpdateReservationDTO {
 	private String id;
 
 	public static UpdateReservationDTO convertToDto(Reservation reservation) {
-		return new UpdateReservationDTO(reservation.getSeat().getOfficeBuilding().getId(),
-				reservation.getSeat().getFloorNumber(), reservation.getSeat().getSeatNumber(), reservation.getDate(),
+		return new UpdateReservationDTO(reservation.getSeat().getOfficeBuildingId().toHexString(),
+				reservation.getSeat().getFloorNumber(), reservation.getSeat().getSeatNumber(), ReservationDTO.dateTimeToDate(reservation.getDate()),
 				reservation.getPersonId(), reservation.getId());
 	}
 

@@ -2,6 +2,8 @@ package com.spr.systemplacereservation.repository;
 
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,17 @@ import com.spr.systemplacereservation.entity.Seat;
 @Repository
 public interface SeatRepository extends MongoRepository<Seat, String> {
 
-	@Query(value = "select s,o from Seat s left outer join OfficeBuilding o on s.officeBuilding.id = o.id where o.id = :officeBuildingId AND s.seatNumber= :seatNumber AND s.floorNumber=:floorNumber")
-	Optional<Seat> findByOfficeBuildingIdAndSeatNumberAndFloorNumber(@Param("officeBuildingId") String officeBuildingId,
-			@Param("seatNumber") String seatNumber, @Param("floorNumber") Integer floorNumber);
+	//@Query("{ 'floor_number' : ?2, 'seat_number' : ?1, 'officebuilding_id.$id': ?0    }")
+	
+	
+	
+	@Aggregation(pipeline = {
+			"{'$match': {'floor_number': ?2, 'seat_number': ?1} }",
+			"{'$lookup': { 'from':'OFFICEBUILDING', 'as':'officeBuilding', 'localField':'officebuilding_id','foreignField':'_id'  } }",
+			"{'$unwind':'$officeBuilding'}"
+			
+	})
+	Optional<Seat> findByOfficeBuildingIdAndSeatNumberAndFloorNumber(
+			 ObjectId officeBuildingId,  String seatNumber,
+			 Integer floorNumber);
 }
