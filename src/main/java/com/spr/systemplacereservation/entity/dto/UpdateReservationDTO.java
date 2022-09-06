@@ -2,8 +2,6 @@ package com.spr.systemplacereservation.entity.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -25,7 +23,6 @@ public class UpdateReservationDTO {
 	private String seatNumber;
 
 	@NotNull
-	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 
