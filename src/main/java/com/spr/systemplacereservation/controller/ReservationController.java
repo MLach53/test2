@@ -63,7 +63,7 @@ public class ReservationController {
 	}
 
 	@DeleteMapping(path = "/reservation")
-	public ResponseEntity<Object> deleteReservation(@RequestParam(name = "id") @Valid @NonNull @Min(1) Integer id) {
+	public ResponseEntity<Object> deleteReservation(@RequestParam(name = "id") @Valid @NonNull @Min(1) String id) {
 		try {
 
 			service.deleteReservation(id);

@@ -74,7 +74,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	@Transactional
-	public void deleteReservation(Integer id) throws ValidationException {
+	public void deleteReservation(String id) throws ValidationException {
 		LOGGER.debug("attempting to delete reservation");
 
 		Reservation reservation = reservationRepository.findById(id)

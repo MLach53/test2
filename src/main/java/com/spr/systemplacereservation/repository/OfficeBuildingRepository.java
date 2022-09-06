@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.spr.systemplacereservation.entity.OfficeBuilding;
 
 @Repository
-public interface OfficeBuildingRepository extends MongoRepository<OfficeBuilding, Integer> {
+public interface OfficeBuildingRepository extends MongoRepository<OfficeBuilding, String> {
 
 }

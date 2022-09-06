@@ -14,7 +14,7 @@ public interface ReservationService {
 
 	public Reservation makeReservation(ReservationDTO dto) throws ValidationException;
 
-	public void deleteReservation(Integer id) throws ValidationException;
+	public void deleteReservation(String id) throws ValidationException;
 
 	public List<ReservationDTO> getReservationsAtGivenDate(LocalDate date) throws ValidationException;
 

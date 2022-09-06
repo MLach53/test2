@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.spr.systemplacereservation.entity.Seat;
 
 @Repository
-public interface SeatRepository extends MongoRepository<Seat, Integer> {
+public interface SeatRepository extends MongoRepository<Seat, String> {
 
 	Optional<Seat> findByOfficeBuildingIdAndSeatNumberAndFloorNumber(String officeBuildingId, String seatNumber,
 			Integer floorNumber);

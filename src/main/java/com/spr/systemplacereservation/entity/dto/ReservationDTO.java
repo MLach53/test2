@@ -37,7 +37,7 @@ public class ReservationDTO extends ReservationWithoutDateDTO {
 
 	public ReservationDTO(@NotNull @Min(1) String officeBuildingId, @NotNull Integer floorNumber,
 			@NotEmpty String seatNumber, @NotNull LocalDate date, @NotNull Integer personId, String additionalMessage,
-			Integer id, LocalDate creationDate) {
+			String id, LocalDate creationDate) {
 		super(officeBuildingId, floorNumber, seatNumber, personId, id, creationDate);
 
 		this.date = date;

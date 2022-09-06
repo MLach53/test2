@@ -23,7 +23,7 @@ public class ReservationWithoutDateDTO {
 	@NotNull
 	protected Integer personId;
 
-	protected Integer id;
+	protected String id;
 
 	protected LocalDate createdOn;
 
@@ -34,7 +34,7 @@ public class ReservationWithoutDateDTO {
 	}
 
 	public ReservationWithoutDateDTO(@NotNull @Min(1) String officeBuildingId, @NotNull Integer floorNumber,
-			@NotEmpty String seatNumber, @NotNull Integer personId, Integer id, LocalDate createdOn) {
+			@NotEmpty String seatNumber, @NotNull Integer personId, String id, LocalDate createdOn) {
 		super();
 		this.officeBuildingId = officeBuildingId;
 		this.floorNumber = floorNumber;
@@ -80,11 +80,11 @@ public class ReservationWithoutDateDTO {
 		this.personId = personId;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
