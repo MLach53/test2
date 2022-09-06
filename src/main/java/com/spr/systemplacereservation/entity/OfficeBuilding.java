@@ -1,27 +1,19 @@
 package com.spr.systemplacereservation.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "OFFICEBUILDING")
 public class OfficeBuilding {
 
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @Column(name = "id")
 	@Id
 	private String id;
 
-	// @Column(name = "name")
+	@Field(name = "name")
 	private String name;
-
-	// @OneToMany(mappedBy = "officeBuilding")
-	@DBRef
-	private List<Seat> seats = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -39,17 +31,9 @@ public class OfficeBuilding {
 		this.name = name;
 	}
 
-	public List<Seat> getSeats() {
-		return seats;
-	}
-
-	public void setSeats(List<Seat> seats) {
-		this.seats = seats;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, seats);
+		return Objects.hash(id, name);
 	}
 
 	@Override
@@ -61,7 +45,7 @@ public class OfficeBuilding {
 		if (getClass() != obj.getClass())
 			return false;
 		OfficeBuilding other = (OfficeBuilding) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(seats, other.seats);
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
 	}
 
 	@Override
